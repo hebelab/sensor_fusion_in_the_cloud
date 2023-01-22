@@ -50,16 +50,16 @@ We try to get access on the Unitree robot SDKs but we cannot because of lack of 
 
 We research the required tools on the Internet. The below hyperlinks will be helpful for us:
 
-Topic | Hyperlink
------ | --------
-Gstreamer stream is not working with OpenCV | https://stackoverflow.com/questions/70753630/gstreamer-stream-is-not-working-with-opencv
-Streaming Gstreamer video to a different address using OpenCV with Python | https://stackoverflow.com/questions/71820489/streaming-gstreamer-video-to-a-different-address-using-opencv-with-python
-How to find the device index of external camera for Gstreamer | https://stackoverflow.com/questions/53940019/how-to-find-the-device-index-of-external-camera-for-gstreamer
-TheImagingSource/tiscamera#436 | https://github.com/TheImagingSource/tiscamera/issues/436
-OpenCV_GStreamer | https://github.com/simondlevy/OpenCV_GStreamer
-Cannot open OpenCV videocapture with Gstreamer pipeline | https://forums.developer.nvidia.com/t/cannot-open-opencv-videocapture-with-gstreamer-pipeline/181639
-Gstreamer tools | https://gstreamer.freedesktop.org/documentation/tutorials/basic/gstreamer-tools.html?gi-language=c
-Gstreamer tutorials | https://gstreamer.freedesktop.org/documentation/tutorials/index.html?gi-language=c
+| Topic | Hyperlink |
+| ----- | -------- |
+| Gstreamer stream is not working with OpenCV | https://stackoverflow.com/questions/70753630/gstreamer-stream-is-not-working-with-opencv |
+| Streaming Gstreamer video to a different address using OpenCV with Python | https://stackoverflow.com/questions/71820489/streaming-gstreamer-video-to-a-different-address-using-opencv-with-python |
+| How to find the device index of external camera for Gstreamer | https://stackoverflow.com/questions/53940019/how-to-find-the-device-index-of-external-camera-for-gstreamer |
+| TheImagingSource/tiscamera#436 | https://github.com/TheImagingSource/tiscamera/issues/436 |
+| OpenCV_GStreamer | https://github.com/simondlevy/OpenCV_GStreamer |
+| Cannot open OpenCV videocapture with Gstreamer pipeline | https://forums.developer.nvidia.com/t/cannot-open-opencv-videocapture-with-gstreamer-pipeline/181639 |
+| Gstreamer tools | https://gstreamer.freedesktop.org/documentation/tutorials/basic/gstreamer-tools.html?gi-language=c |
+| Gstreamer tutorials | https://gstreamer.freedesktop.org/documentation/tutorials/index.html?gi-language=c |
 
 ## 2022.10.25
 * Successfully established communication between the legged robot and ROS
