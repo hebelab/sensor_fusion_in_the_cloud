@@ -1,7 +1,12 @@
 # Sensor Fusion in the Cloud: Logbook
 
-Author: Ahmet Yusuf Şirin
-Student Number: 21947641
+---
+
+*Author: Ahmet Yusuf Şirin*
+
+*Student Number: 21947641*
+
+---
 
 This logbook documents the progress and milestones of our sensor fusion project for a legged robot, which aims to improve the robot's perception and localization capabilities using a combination of stereo camera and LiDAR sensors. The project is being carried out using a combination of Github, MATLAB, Python, and ROS programming environments, and we are working closely with our supervisor and a team of fellow students to achieve our goals. The logbook entries include details on our research, experimentation, and implementation efforts, as well as any challenges and successes we encounter along the way. Our ultimate goal is to develop a robust sensor fusion algorithm that can be integrated into the robot's control system to enhance its performance in real-world environments. The methodology is to research and experiment on various sensor fusion algorithms and eventually implement the most suitable one for our project and also we are keeping a logbook for the progress of our project and documenting our every step.
 
