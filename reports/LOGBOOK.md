@@ -2,9 +2,9 @@
 
 ---
 
-*Author: Ertuğrul Tiyek*
+*Author: Ahmet Yusuf Şirin*
 
-*Student Number: 21828916*
+*Student Number: 21947641*
 
 ---
 
