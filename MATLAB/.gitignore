@@ -1,0 +1,6 @@
+# Ignore data folders
+/ZED
+/lidar
+
+# Ignore with extension
+*.pdf
