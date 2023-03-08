@@ -1,2 +1,5 @@
 /.vscode/
 /data
+
+# Platform Specific
+.DS_Store
