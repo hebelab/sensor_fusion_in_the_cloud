@@ -1,0 +1,8 @@
+setup.py
+PG/PG.py
+PG/__init__.py
+PG.egg-info/PKG-INFO
+PG.egg-info/SOURCES.txt
+PG.egg-info/dependency_links.txt
+PG.egg-info/requires.txt
+PG.egg-info/top_level.txt

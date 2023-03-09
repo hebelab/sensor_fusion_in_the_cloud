@@ -1,0 +1,6 @@
+Metadata-Version: 2.1
+Name: PG
+Version: 0.1
+Summary: Papoulis Gerchberg Algorithm to upsample 3D lidar data
+Author: Ertugrul Tiyek
+Author-email: ertugrultyk@gmail.com
