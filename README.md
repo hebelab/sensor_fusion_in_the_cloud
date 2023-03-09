@@ -3,6 +3,10 @@ A workspace for all codes, reports, and further files of our graduate project.
 
 ## Development
 
+### Jupyter Notebook
+
+Please clear output products before committiong and pushing files.
+
 ### DVC
 
 `Pipfile` at the root directory is reserved for the DVC tool. To install required packages:
