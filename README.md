@@ -5,15 +5,33 @@ A workspace for all codes, reports, and further files of our graduate project.
 
 ### DVC
 
+`Pipfile` at the root directory is reserved for the DVC tool. To install required packages:
+
 ```bash
 pipenv update
 ```
 
+For the first setup of the DVC in this project I follow the below steps.
+
 ```bash
 dvc init
+dvc remote add --default gdrive://1xw2gfQyT5gwDVAv3DRXnSHcHIkuVPe2W
 dvc add data/image/ data/lidar/ data/ZED/
 git add data/.gitignore data/ZED.dvc data/image.dvc data/lidar.dvc
-dvc remote add --default gdrive://1xw2gfQyT5gwDVAv3DRXnSHcHIkuVPe2W
+```
+
+For updating the `data` directory only you have to do is:
+
+```bash
+dvc add data/image/ data/lidar/ data/ZED/
+git add data/.gitignore data/ZED.dvc data/image.dvc data/lidar.dvc
+```
+
+For pushing/pulling:
+
+```bash
+dvc push
+dvc pull
 ```
 
 ## Objectives 
