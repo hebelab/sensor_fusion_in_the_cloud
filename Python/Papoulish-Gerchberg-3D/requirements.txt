@@ -1,0 +1,6 @@
+matplotlib==3.6.2
+numpy==1.22.3
+open3d==0.16.0
+opencv-python==4.6.0.66
+pandas==1.4.1
+pyntcloud
