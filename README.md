@@ -1,6 +1,21 @@
 # Sensor Fusion in the Cloud
 A workspace for all codes, reports, and further files of our graduate project.
 
+## Development
+
+### DVC
+
+```bash
+pipenv update
+```
+
+```bash
+dvc init
+dvc add data/image/ data/lidar/ data/ZED/
+git add data/.gitignore data/ZED.dvc data/image.dvc data/lidar.dvc
+dvc remote add --default gdrive://1xw2gfQyT5gwDVAv3DRXnSHcHIkuVPe2W
+```
+
 ## Objectives 
 The purpose of the graduation project is for the student to have a major design experience based on the skills and knowledge acquired in earlier course work, with multiple realistic constraints. In this first course in the two-course sequence, the student starts a project that involves designing a system, component, or process to meet desired needs. At the end of this course, the student develops possible solutions and identifies design choices and/or design parameters.
 
