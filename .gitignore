@@ -1,0 +1,5 @@
+/.vscode/
+*.lock
+
+# Platform Specific
+.DS_Store

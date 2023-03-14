@@ -1,6 +1,43 @@
 # Sensor Fusion in the Cloud
 A workspace for all codes, reports, and further files of our graduate project.
 
+## Development
+
+### Jupyter Notebook
+
+Please clear output products before committiong and pushing files.
+
+### DVC
+
+`Pipfile` at the root directory is reserved for the DVC tool. To install required packages:
+
+```bash
+pipenv update
+```
+
+For the first setup of the DVC in this project I follow the below steps.
+
+```bash
+dvc init
+dvc remote add --default gdrive://1xw2gfQyT5gwDVAv3DRXnSHcHIkuVPe2W
+dvc add data/image/ data/lidar/ data/ZED/
+git add data/.gitignore data/ZED.dvc data/image.dvc data/lidar.dvc
+```
+
+For updating the `data` directory only you have to do is:
+
+```bash
+dvc add data/image/ data/lidar/ data/ZED/
+git add data/.gitignore data/ZED.dvc data/image.dvc data/lidar.dvc
+```
+
+For pushing/pulling:
+
+```bash
+dvc push
+dvc pull
+```
+
 ## Objectives 
 The purpose of the graduation project is for the student to have a major design experience based on the skills and knowledge acquired in earlier course work, with multiple realistic constraints. In this first course in the two-course sequence, the student starts a project that involves designing a system, component, or process to meet desired needs. At the end of this course, the student develops possible solutions and identifies design choices and/or design parameters.
 
