@@ -1,5 +1,6 @@
 /.vscode/
 *.lock
+*.csv
 
 # Platform Specific
 .DS_Store
