@@ -3,7 +3,7 @@ import numpy as np
 import cupy as cp
 import matplotlib.pyplot as plt
 import csv
-import os
+import time
 
 from utils import *
 
@@ -130,8 +130,13 @@ def load_zed(path):
 
 
 def main():
+    start = time.time()
     sph_lidar_frame = load_lidar(LiDAR_data)
+    print(time.time() - start)
+    
+    start = time.time()
     sph_zed_frame = load_zed(ZED_data)
+    print(time.time() - start)
     
     plt.imsave('sph_lidar_frame.png', sph_lidar_frame)
     plt.imsave('sph_zed_frame.png', sph_zed_frame)
@@ -143,13 +148,20 @@ def main():
     
     plt.imsave('pg_frame_init.png', pg_frame_init)
 
-    pg_frame = pg(cp.asarray(pg_frame_init), m, ncutoff=1, threshold=1)
+    start = time.time()
+    pg_frame = pg(cp.asarray(pg_frame_init), m, ncutoff=1, threshold=50)
+    print(time.time() - start)
 
     plt.imsave('pg_frame.png', pg_frame.get())
 
+    start = time.time()
     pg_pts = depth_to_sph_pts(pg_frame)
+    print(time.time() - start)
+    
+    start = time.time()
     pg_pcd = sph_pcd_to_cart_pcd(pg_pts)
-
+    print(time.time() - start)
+    
     o3d.visualization.draw_geometries([
         pg_pcd,
     ])
