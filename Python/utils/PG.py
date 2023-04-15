@@ -3,6 +3,9 @@ import cupy as cp
 import cv2
 
 
+__all__ = ['lpf', 'pg']
+
+
 def lpf(img, ncutoff):
     # Apply 2D FFT to the image
     f = cp.fft.fft2(img)
@@ -16,6 +19,7 @@ def lpf(img, ncutoff):
     mask = np.zeros((rows, cols), np.uint8)
     cutoff = int(min(crow, ccol)*ncutoff)
     cv2.circle(mask, (ccol, crow), cutoff, 1, -1)
+    # cv2.ellipse(mask, (ccol, crow), (1, 2) * cutoff, 0, 0, 360,  1, -1)
 
     mask = cp.asarray(mask)
 
@@ -33,6 +37,7 @@ def lpf(img, ncutoff):
 
 
 def pg(input, us_rate, ncutoff, threshold=100):
+    ncutoff = ncutoff / 10
     filtered = input
 
     while threshold > 0:
