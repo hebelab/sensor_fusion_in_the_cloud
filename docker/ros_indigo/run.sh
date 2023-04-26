@@ -13,3 +13,9 @@ echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
 sudo apt-get install -y python-rosinstall
+
+echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+
+sudo apt-get install -y xvfb
+
+echo "Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & export DISPLAY=:99;" >> ~/.bashrc
