@@ -38,6 +38,14 @@ dvc push
 dvc pull
 ```
 
+### loam_velodyne
+
+```bash
+git clone https://github.com/ayusufsirin/loam_velodyne
+cd loam_velodyne 
+git checkout -b elastic_grandpa 3feae58fdce82f2e96bc42e70c4d30438d1c8922 
+```
+
 ## Objectives 
 The purpose of the graduation project is for the student to have a major design experience based on the skills and knowledge acquired in earlier course work, with multiple realistic constraints. In this first course in the two-course sequence, the student starts a project that involves designing a system, component, or process to meet desired needs. At the end of this course, the student develops possible solutions and identifies design choices and/or design parameters.
 

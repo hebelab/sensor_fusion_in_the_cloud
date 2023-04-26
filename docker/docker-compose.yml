@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  ros-master:
+    container_name: ros-master
+    build: 
+      context: ./ros_indigo
+    volumes:
+      - ./catkin_ws:/catkin_ws
+    networks:
+      - ros_network
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+  ros-node:
+    container_name: ros-node
+    build: 
+      context: ./ros_indigo
+    depends_on:
+      - ros-master
+    environment:
+      - "ROS_MASTER_URI=http://ros-master:11311"
+      - "DISPLAY=${DISPLAY}"
+      - "QT_X11_NO_MITSHM=1"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    networks:
+      - ros_network
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+networks:
+  ros_network:
+    driver: bridge
