@@ -20,6 +20,35 @@ Now you can push "CTRL+Z" on Linux host to make process run in the background.
 
 ## ROS Nodes
 
+### "zed" Container
+
+```bash
+cd ~/catkin_ws/src
+git clone --recursive https://github.com/stereolabs/zed-ros-wrapper.git
+
+git checkout tags/v3.8.x
+git switch -c fantastic_grandpa
+
+cd ../
+rosdep install --from-paths src --ignore-src -r -y
+catkin_make -DCMAKE_BUILD_TYPE=Release
+source ./devel/setup.bash
+```
+
+```bash
+cd ~/catkin_ws/src
+git clone --recursive https://github.com/stereolabs/zed-ros-examples
+
+git checkout tags/v3.8.x
+git switch -c fantastic_grandpa
+
+cd ../
+rosdep install --from-paths src --ignore-src -r -y
+catkin_make -DCMAKE_BUILD_TYPE=Release
+source ./devel/setup.bash
+```
+
+
 ### "loam_velodyne" Container
 
 Now jump to another terminal session
