@@ -1,0 +1,9 @@
+[submodule "docker/loam_velodyne/catkin_ws/src/loam_velodyne"]
+	path = docker/loam_velodyne/catkin_ws/src/loam_velodyne
+	url = https://github.com/laboshinl/loam_velodyne.git
+[submodule "docker/zed/catkin_ws/src/zed-ros-examples"]
+	path = docker/zed/catkin_ws/src/zed-ros-examples
+	url = https://github.com/stereolabs/zed-ros-examples
+[submodule "docker/zed/catkin_ws/src/zed-ros-wrapper"]
+	path = docker/zed/catkin_ws/src/zed-ros-wrapper
+	url = https://github.com/stereolabs/zed-ros-wrapper
