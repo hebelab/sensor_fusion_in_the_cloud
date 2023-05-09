@@ -3,7 +3,7 @@ version: '3'
 services:
   loam_velodyne:
     image: ros_indigo
-    container_name: sfitc-ros-loam_velodyne
+    container_name: sfitc-loam_velodyne
     network_mode: host
     environment:
       - ROS_MASTER_URI=http://192.168.123.161:11311
@@ -15,10 +15,35 @@ services:
     command: /bin/bash
 
   zed:
-    image: stereolabs/zed:3.8-runtime-cuda11.7-ubuntu20.04
+    image: zed_3.8
     container_name: sfitc-zed
     network_mode: host
     environment:
       - DISPLAY=${DISPLAY}
     volumes:
+      - ./zed/catkin_ws:/root/catkin_ws
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  main:
+    image: nvidia/cuda:10.2-base
+    container_name: sfitc-main
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
