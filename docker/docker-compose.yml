@@ -1,38 +1,24 @@
 version: '3'
 
 services:
-  sfitc_ros-node:
+  loam_velodyne:
     image: ros_indigo
-    container_name: sfitc_ros-node
+    container_name: sfitc-ros-loam_velodyne
     network_mode: host
     environment:
-      - ROS_MASTER_URI=http://0.0.0.0:11311
-      - ROS_IP=0.0.0.0
-      - DISPLAY=${DISPLAY}
-      - QT_X11_NO_MITSHM=1
+      - ROS_MASTER_URI=http://192.168.123.161:11311
+      - ROS_IP=192.168.123.9
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - /tmp/.docker.xauth:/tmp/.docker.xauth
-      - /media/joseph/Development/DS:/lidar_data
-      - ./sfitc/catkin_ws:/root/catkin_ws
+      - ./loam_velodyne/catkin_ws:/root/catkin_ws
     stdin_open: true
     tty: true
     command: /bin/bash
 
-  sfitc_ros_cartographer:
-    image: ros:noetic
-    container_name: sfitc_ros_cartographer
+  zed:
+    image: stereolabs/zed:3.8-runtime-cuda11.7-ubuntu20.04
+    container_name: sfitc-zed
     network_mode: host
     environment:
-      - ROS_MASTER_URI=http://0.0.0.0:11311
-      - ROS_IP=0.0.0.0
       - DISPLAY=${DISPLAY}
-      - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - /tmp/.docker.xauth:/tmp/.docker.xauth
-      - /media/joseph/Development/DS:/lidar_data
-      - ./sfitc/catkin_ws:/root/catkin_ws
-    stdin_open: true
-    tty: true
-    command: /bin/bash
