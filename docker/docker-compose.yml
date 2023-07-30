@@ -2,23 +2,52 @@ version: '3'
 
 services:
   loam_velodyne:
-    image: ros_indigo
+    image: sfitc-loam_velodyne
     container_name: sfitc-loam_velodyne
     network_mode: host
     environment:
-      - ROS_MASTER_URI=http://192.168.123.161:11311
-      - ROS_IP=192.168.123.9
+      - ROS_MASTER_URI=http://0.0.0.0:11311
+      - ROS_IP=0.0.0.0
     volumes:
       - ./loam_velodyne/catkin_ws:/root/catkin_ws
     stdin_open: true
     tty: true
     command: /bin/bash
 
+  # rtabmap:
+  #   image: sfitc-rtabmap
+  #   container_name: sfitc-rtabmap
+  #   network_mode: host
+  #   privileged: true
+  #   environment:
+  #     - ROS_MASTER_URI=http://0.0.0.0:11311
+  #     - ROS_IP=0.0.0.0
+  #     - DISPLAY=${DISPLAY}
+  #     - XAUTHORITY=/tmp/.docker.xauth
+  #     - QT_X11_NO_MITSHM=1
+  #   volumes:
+  #     - ./rtabmap/catkin_ws:/root/catkin_ws
+  #     - /tmp/.X11-unix:/tmp/.X11-unix:rw
+  #     - /tmp/.docker.xauth:/tmp/.docker.xauth
+  #   stdin_open: true
+  #   tty: true
+  #   command: /bin/bash
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
+
   zed:
-    image: zed_3.8
+    image: sfitc-zed
     container_name: sfitc-zed
     network_mode: host
+    privileged: true
     environment:
+      - ROS_MASTER_URI=http://0.0.0.0:11311
+      - ROS_IP=0.0.0.0
       - DISPLAY=${DISPLAY}
     volumes:
       - ./zed/catkin_ws:/root/catkin_ws
@@ -34,16 +63,31 @@ services:
               count: 1
               capabilities: [gpu]
 
-  main:
-    image: nvidia/cuda:10.2-base
-    container_name: sfitc-main
-    stdin_open: true
-    tty: true
-    command: /bin/bash
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+  vlp:
+    image: sfitc-vlp
+    container_name: sfitc-vlp
+    network_mode: host
+    # restart: always
+    privileged: true
+    environment:
+      - ROS_MASTER_URI=http://0.0.0.0:11311
+      - ROS_IP=0.0.0.0
+
+  # main:
+  #   image: nvidia/cuda:10.2-base
+  #   container_name: sfitc-main
+  #   stdin_open: true
+  #   tty: true
+  #   command: /bin/bash
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
+
+  ### Docker "run"
+  # docker run -d --name sfitc-vlp -e ROS_MASTER_URI=http://192.168.123.161:11311 -e ROS_IP=192.168.123.13 --net host --restart always sfitc-vlp-arm64
+  # docker run -it --name sfitc-vlp -e ROS_MASTER_URI=http://0.0.0.0:11311 -e ROS_IP=0.0.0.0 --net host sfitc-vlp
+  # docker run -it --name sfitc-vlp -e ROS_MASTER_URI=http://0.0.0.0:11311 -e ROS_IP=0.0.0.0 --net host --restart always sfitc-vlp-arm64:device_ip
