@@ -1,6 +1,50 @@
 # Sensor Fusion in the Cloud
 A workspace for all codes, reports, and further files of our graduate project.
 
+## Clonning
+
+Clone recursively:
+
+```bash
+git clone --recursive <repo>
+```
+
+Clone Docker images:
+
+```bash
+docker pull yusufsirin/sfitc-zed:latest yusufsirin/sfitc-vlp:latest yusufsirin/sfitc-loam_velodyne:latest
+docker tag yusufsirin/sfitc-zed sfitc-zed
+docker tag yusufsirin/sfitc-vlp sfitc-vlp
+docker tag yusufsirin/sfitc-loam_velodyne sfitc-loam_velodyne
+docker rmi yusufsirin/sfitc-zed yusufsirin/sfitc-vlp yusufsirin/sfitc-loam_velodyne
+```
+
+
+## Running
+
+```bash
+roscore &
+xhost +si:localuser:root &
+cd <project_root>/docker
+docker-compose up -d
+```
+
+zed
+```bash
+docker exec -it sfitc-zed bash
+cd ~/catkin_ws
+catkin_make
+source devel/setup.bash
+roslaunch zed_wrapper zed.launch rviz:=false
+```
+
+vlp 
+```bash
+docker exec -it sfitc-vlp bash
+roslaunch velodyne_pointcloud VLP16_points.launch
+```
+
+
 ## Development
 
 ### Jupyter Notebook
@@ -36,14 +80,6 @@ For pushing/pulling:
 ```bash
 dvc push
 dvc pull
-```
-
-### loam_velodyne
-
-```bash
-git clone https://github.com/ayusufsirin/loam_velodyne
-cd loam_velodyne 
-git checkout -b elastic_grandpa 3feae58fdce82f2e96bc42e70c4d30438d1c8922 
 ```
 
 ## Objectives 
