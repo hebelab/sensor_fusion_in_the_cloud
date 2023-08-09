@@ -7,3 +7,9 @@
 [submodule "docker/zed/catkin_ws/src/zed-ros-wrapper"]
 	path = docker/zed/catkin_ws/src/zed-ros-wrapper
 	url = https://github.com/stereolabs/zed-ros-wrapper
+[submodule "RTK/NTRIP_Client/RTKLIB"]
+	path = RTK/NTRIP_Client/RTKLIB
+	url = https://github.com/tomojitakasu/RTKLIB
+[submodule "RTK/NTRIP_Client/ntripclient"]
+	path = RTK/NTRIP_Client/ntripclient
+	url = https://github.com/nunojpg/ntripclient
