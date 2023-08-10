@@ -3,7 +3,7 @@ import socket
 import threading
 
 # Parameters for the virtual serial port
-SERIAL_PORT = 'COM1'  # or '/dev/ttyS1' for Unix systems
+SERIAL_PORT = 'COM3'
 BAUD_RATE = 115200
 DATA_BITS = 8
 PARITY = 'N'
@@ -29,6 +29,7 @@ def serial_to_tcp(tcp_socket):
     while True:
         data = ser.read(BUFFER_SIZE)
         if data:
+            print("serial2tcp: ", data)
             tcp_socket.send(data)
 
 # Function to handle data transfer from TCP to serial port
@@ -36,6 +37,7 @@ def tcp_to_serial(tcp_socket):
     while True:
         data = tcp_socket.recv(BUFFER_SIZE)
         if data:
+            print("tcp2serial: ", data)
             ser.write(data)
 
 # Create the TCP server
