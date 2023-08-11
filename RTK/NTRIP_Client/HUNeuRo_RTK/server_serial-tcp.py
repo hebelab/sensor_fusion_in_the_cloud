@@ -11,7 +11,7 @@ STOP_BITS = 1
 
 # Parameters for the TCP server
 TCP_IP = '0.0.0.0'
-TCP_PORT = 12345
+TCP_PORT = 2101
 BUFFER_SIZE = 1024
 
 # Create and configure the virtual serial port
@@ -40,15 +40,30 @@ def tcp_to_serial(tcp_socket):
             print("tcp2serial: ", data)
             ser.write(data)
 
-# Create the TCP server
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((TCP_IP, TCP_PORT))
-s.listen(1)
-print(f"Listening for incoming connections on {TCP_IP}:{TCP_PORT}")
+try:
+    # Create the TCP server
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((TCP_IP, TCP_PORT))
+    s.listen(1)
+    print(f"Listening for incoming connections on {TCP_IP}:{TCP_PORT}")
 
-conn, addr = s.accept()
-print(f"Connection from: {addr}")
+    conn, addr = s.accept()
+    print(f"Connection from: {addr}")
 
-# Start the data transfer between the two interfaces
-threading.Thread(target=serial_to_tcp, args=(conn,)).start()
-threading.Thread(target=tcp_to_serial, args=(conn,)).start()
+    # Start the data transfer between the two interfaces
+    t1 = threading.Thread(target=serial_to_tcp, args=(conn,))
+    t2 = threading.Thread(target=tcp_to_serial, args=(conn,))
+    
+    t1.daemon = True
+    t2.daemon = True
+
+    t1.start()
+    t2.start()
+
+    while True:
+        pass
+
+except KeyboardInterrupt:
+    print("\nShutting down server...")
+    s.close()
+    ser.close()
