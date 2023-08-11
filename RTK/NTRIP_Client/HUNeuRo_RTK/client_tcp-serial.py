@@ -1,16 +1,25 @@
 import serial
 import socket
 import threading
+import argparse
+
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description='provides communication between two serial ports over TCP/IP network (Client Side)')
+parser.add_argument('-i', '--server-ip', required=True, help='IP of the TCP server (e.g. 192.168.1.77)')
+parser.add_argument('-s', '--serial-port', required=True, help='Serial port for the device (e.g. /dev/ttyUSB0)')
+parser.add_argument('-b', '--baud-rate', type=int, required=True, help='Baud rate for the serial port (e.g. 115200)')
+
+args = parser.parse_args()
 
 # Parameters for the physical serial port
-SERIAL_PORT = '{SerialPort}'  # This should be your actual serial port
-BAUD_RATE = 115200
+SERIAL_PORT = args.serial_port  # This should be your actual serial port
+BAUD_RATE = args.baud_rate
 DATA_BITS = 8
 PARITY = 'N'
 STOP_BITS = 1
 
 # Parameters for the TCP client
-TCP_IP = '{ServerIP}'
+TCP_IP = args.server_ip
 TCP_PORT = 2101
 BUFFER_SIZE = 1024
 

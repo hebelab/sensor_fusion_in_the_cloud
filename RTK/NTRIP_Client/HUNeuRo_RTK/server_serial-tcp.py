@@ -1,10 +1,18 @@
 import serial
 import socket
 import threading
+import argparse
+
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description='provides communication between two serial ports over TCP/IP network (Server Side)')
+parser.add_argument('-s', '--serial-port', required=True, help='Serial port for the device (e.g. /dev/ttyUSB0)')
+parser.add_argument('-b', '--baud-rate', type=int, required=True, help='Baud rate for the serial port (e.g. 115200)')
+
+args = parser.parse_args()
 
 # Parameters for the virtual serial port
-SERIAL_PORT = 'COM3'
-BAUD_RATE = 115200
+SERIAL_PORT = args.serial_port
+BAUD_RATE = args.baud_rate
 DATA_BITS = 8
 PARITY = 'N'
 STOP_BITS = 1
