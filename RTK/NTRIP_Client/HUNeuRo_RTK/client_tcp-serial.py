@@ -21,7 +21,7 @@ STOP_BITS = 1
 # Parameters for the TCP client
 TCP_IP = args.server_ip
 TCP_PORT = 2101
-BUFFER_SIZE = 1024
+BUFFER_SIZE = 4096
 
 # Create and configure the physical serial port
 ser = serial.Serial(

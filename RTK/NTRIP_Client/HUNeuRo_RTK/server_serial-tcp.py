@@ -20,7 +20,7 @@ STOP_BITS = 1
 # Parameters for the TCP server
 TCP_IP = '0.0.0.0'
 TCP_PORT = 2101
-BUFFER_SIZE = 1024
+BUFFER_SIZE = 4096
 
 # Create and configure the virtual serial port
 ser = serial.Serial(
