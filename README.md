@@ -12,7 +12,9 @@ git clone --recursive <repo>
 Clone Docker images:
 
 ```bash
-docker pull yusufsirin/sfitc-zed:latest yusufsirin/sfitc-vlp:latest yusufsirin/sfitc-loam_velodyne:latest
+docker pull yusufsirin/sfitc-zed:latest
+docker pull yusufsirin/sfitc-vlp:latest
+docker pull yusufsirin/sfitc-loam_velodyne:latest
 docker tag yusufsirin/sfitc-zed sfitc-zed
 docker tag yusufsirin/sfitc-vlp sfitc-vlp
 docker tag yusufsirin/sfitc-loam_velodyne sfitc-loam_velodyne
