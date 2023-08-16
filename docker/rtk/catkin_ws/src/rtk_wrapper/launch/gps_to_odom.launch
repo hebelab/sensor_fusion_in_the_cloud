@@ -1,0 +1,8 @@
+<launch>
+  <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true" output="screen">
+    <rosparam command="load" file="$(find rtk_wrapper)/config/navsat_transform.yaml" />
+    <remap from="/imu/data" to="your_imu_topic" />
+    <remap from="/gps/fix" to="your_gps_topic" />
+    <remap from="/odometry/filtered" to="/odometry/gps" />
+  </node>
+</launch>
