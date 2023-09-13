@@ -5,9 +5,9 @@ import argparse
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='provides communication between two serial ports over TCP/IP network (Client Side)')
-parser.add_argument('-i', '--server-ip', required=False, help='IP of the TCP server (e.g. 192.168.1.77)')
-parser.add_argument('-s', '--serial-port', required=False, help='Serial port for the device (e.g. /dev/ttyUSB0)', default='/dev/ttyUSB1')
-parser.add_argument('-b', '--baud-rate', type=int, required=False, help='Baud rate for the serial port (e.g. 115200)', default=115200)
+parser.add_argument('-i', '--server-ip', required=True, help='IP of the TCP server (e.g. 192.168.1.77)')
+parser.add_argument('-s', '--serial-port', required=True, help='Serial port for the device (e.g. /dev/ttyUSB0)')
+parser.add_argument('-b', '--baud-rate', type=int, required=True, help='Baud rate for the serial port (e.g. 115200)')
 
 args = parser.parse_args()
 

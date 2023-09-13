@@ -4,6 +4,48 @@
 sudo apt install ros-<version_name>-velodyne
 ```
 
+# Record
+
+```bash
+rosbag record \
+	/zed/zed_node/depth/camera_info \
+	/zed/zed_node/depth/camera_info \
+	/zed/zed_node/odom \
+	/zed/zed_node/parameter_descriptions \
+	/zed/zed_node/parameter_updates \
+	/zed/zed_node/path_map \
+	/zed/zed_node/path_odom \
+	/zed/zed_node/plane \
+	/zed/zed_node/plane_marker \
+	/zed/zed_node/point_cloud/cloud_registered \
+	/zed/zed_node/pose \
+	/zed/zed_node/pose_with_covariance \
+	/zed/zed_node/rgb/camera_info \
+	/zed/zed_node/rgb/image_rect_color \
+	/clicked_point \
+	/device_time \
+	/diagnostics \
+	/gps/fix \
+	/imu/data \
+	/rosout \
+	/rosout_agg \
+	/scaled_llh \
+	/scan \
+	/status \
+	/tf \
+	/tf_static \
+	/velocity \
+	/velodyne_nodelet_manager/bond \
+	/velodyne_nodelet_manager_driver/parameter_descriptions \
+	/velodyne_nodelet_manager_driver/parameter_updates \
+	/velodyne_nodelet_manager_laserscan/parameter_descriptions \
+	/velodyne_nodelet_manager_laserscan/parameter_updates \
+	/velodyne_nodelet_manager_transform/parameter_descriptions \
+	/velodyne_nodelet_manager_transform/parameter_updates \
+	/velodyne_packets \
+	/velodyne_points
+```
+
 # Running
 
 ## ROS Core

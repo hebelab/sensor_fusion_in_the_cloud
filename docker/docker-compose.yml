@@ -1,15 +1,15 @@
 version: '3'
 
 services:
-  vlp:
-    image: sfitc-vlp
-    container_name: sfitc-vlp
-    network_mode: host
-    # restart: always
-    privileged: true
-    environment:
-      - ROS_MASTER_URI=http://0.0.0.0:11311
-      - ROS_IP=0.0.0.0
+  # vlp:
+  #   image: sfitc-vlp
+  #   container_name: sfitc-vlp
+  #   network_mode: host
+  #   # restart: always
+  #   privileged: true
+  #   environment:
+  #     - ROS_MASTER_URI=http://0.0.0.0:11311
+  #     - ROS_IP=0.0.0.0
 
   rtk:
     image: sfitc-rtk
@@ -23,9 +23,27 @@ services:
     volumes:
       - /dev/bus/usb:/dev/bus/usb
       - ../RTK:/RTK
-      - ./rtk/catkin_ws:/root/catkin_ws
+      - ./rtk:/rtk
     stdin_open: true
     tty: true
+    entrypoint: /rtk/entrypoint.sh
+
+  # zed_udp:
+  #   build: 
+  #     context: ./UDP/
+  #     dockerfile: Dockerfile
+  #   container_name: sfitc-zed-udp
+  #   network_mode: host
+  #   # restart: always
+  #   privileged: true
+  #   environment:
+  #     - ROS_MASTER_URI=http://0.0.0.0:11311
+  #     - ROS_IP=0.0.0.0
+  #   volumes:
+  #     - /dev/bus/usb:/dev/bus/usb
+  #     - ./UDP/catkin_ws:/catkin_ws
+  #   stdin_open: true
+  #   tty: true
 
   ### Docker "run"
   # docker run -d --name sfitc-vlp -e ROS_MASTER_URI=http://192.168.123.161:11311 -e ROS_IP=192.168.123.13 --net host --restart always sfitc-vlp-arm64
