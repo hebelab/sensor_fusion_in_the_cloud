@@ -1,0 +1,49 @@
+version: '3'
+
+services: 
+  vlp:
+    image: sfitc-vlp:latest
+    # build: ./vlp
+    container_name: sfitc-vlp-jetson
+    network_mode: host
+    # restart: always
+    privileged: true
+    volumes:
+      - ./vlp/entrypoint.sh:/vlp/entrypoint.sh
+    environment:
+      - ROS_MASTER_URI=http://0.0.0.0:11311
+      - ROS_IP=0.0.0.0
+    # stdin_open: true
+    # tty: true
+    # entrypoint: /bin/bash
+    entrypoint: /vlp/entrypoint.sh
+
+  # zed:
+  #   image: sfitc-zed:raw
+  #   container_name: sfitc-zed-jetson
+  #   network_mode: host
+  #   # restart: always
+  #   # privileged: true
+  #   environment:
+  #     - ROS_MASTER_URI=http://0.0.0.0:11311
+  #     - ROS_IP=0.0.0.0
+  #   # stdin_open: true
+  #   # tty: true
+  #   command: /bin/bash
+
+  rtk:
+    image: sfitc-rtk:latest
+    container_name: sfitc-rtk-jetson
+    network_mode: host
+    # restart: always
+    privileged: true
+    environment:
+      - ROS_MASTER_URI=http://0.0.0.0:11311
+      - ROS_IP=0.0.0.0
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb
+      - ../RTK:/RTK
+      - ./rtk:/rtk
+    # stdin_open: true
+    # tty: true
+    entrypoint: /rtk/entrypoint.sh
