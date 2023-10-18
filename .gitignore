@@ -7,3 +7,4 @@ draft/
 
 # Platform Specific
 .DS_Store
+*.code-workspace
