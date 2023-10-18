@@ -96,8 +96,10 @@ services:
               count: 1
               capabilities: [gpu]
 
+# TODO: Add a entrypoint
   rtabmap:
     image: sfitc-rtabmap
+    # build: ./rtabmap
     container_name: sfitc-rtabmap
     network_mode: host
     privileged: true

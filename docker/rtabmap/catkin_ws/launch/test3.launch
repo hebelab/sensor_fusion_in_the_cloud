@@ -1,0 +1,13 @@
+<launch>
+    <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_sync/rgbd_sync"
+        output="screen">
+        <remap from="/zed/zed_node/rgb/image_rect_color" to="/camera/rgb/image_rect_color" />
+        <remap from="/zed/zed_node/depth/depth_registered" to="/camera/depth_registered/image_raw" />
+        <remap from="/zed/zed_node/rgb/camera_info" to="/camera/rgb/camera_info" />
+        <remap from="rgbd_image" to="rgbd_image" /> <!-- output -->
+
+        <!-- Should be true for not synchronized camera topics 
+           (e.g., false for kinectv2, zed, realsense, true for xtion, kinect360)-->
+        <param name="approx_sync" value="false" />
+    </node>
+</launch>
