@@ -2,5 +2,7 @@
 *.lock
 *.csv
 
+draft/
+
 # Platform Specific
 .DS_Store
