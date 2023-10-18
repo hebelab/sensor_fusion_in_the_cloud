@@ -52,5 +52,3 @@ RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_make'
 
 # Source ros packages from bashrc
 RUN echo "source $HOME/ros_ws/devel/setup.bash" >> ~/.bashrc
-
-CMD ["roslaunch", "velodyne_pointcloud", "VLP16_points.launch"]

@@ -10,6 +10,6 @@ RUN sudo apt install -y ros-noetic-ros-base
 
 # Setup environment
 COPY run.sh /run.sh
-RUN /bin/bash /run.sh
+# RUN /bin/bash /run.sh
 
 CMD ["/bin/bash"]

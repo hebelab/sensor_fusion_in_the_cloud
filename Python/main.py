@@ -142,17 +142,18 @@ def main():
     plt.imsave('sph_zed_frame.png', sph_zed_frame)
 
     m = ZED_V//LiDAR_V
-
-    pg_frame_init = sph_zed_frame
-    pg_frame_init[::m, :] = sph_lidar_frame
     
-    plt.imsave('pg_frame_init.png', pg_frame_init)
+    # plt.imsave('pg_frame_init.png', pg_frame_init)
 
-    start = time.time()
-    pg_frame = pg(cp.asarray(pg_frame_init), m, ncutoff=1, threshold=50)
-    print(time.time() - start)
+    for threshold in range(1, 100):
+        pg_frame_init = sph_zed_frame
+        pg_frame_init[::m, :] = sph_lidar_frame
+    
+        start = time.time()
+        pg_frame = pg(cp.asarray(pg_frame_init), m, ncutoff=1, threshold=threshold)
+        print(f'\t{threshold}: ', time.time() - start)
 
-    plt.imsave('pg_frame.png', pg_frame.get())
+    # plt.imsave('pg_frame.png', pg_frame.get())
 
     start = time.time()
     pg_pts = depth_to_sph_pts(pg_frame)

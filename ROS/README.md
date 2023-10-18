@@ -4,49 +4,21 @@
 sudo apt install ros-<version_name>-velodyne
 ```
 
-# Record
+### loam_velodyne
 
 ```bash
-rosbag record \
-	/zed/zed_node/depth/camera_info \
-	/zed/zed_node/depth/camera_info \
-	/zed/zed_node/odom \
-	/zed/zed_node/parameter_descriptions \
-	/zed/zed_node/parameter_updates \
-	/zed/zed_node/path_map \
-	/zed/zed_node/path_odom \
-	/zed/zed_node/plane \
-	/zed/zed_node/plane_marker \
-	/zed/zed_node/point_cloud/cloud_registered \
-	/zed/zed_node/pose \
-	/zed/zed_node/pose_with_covariance \
-	/zed/zed_node/rgb/camera_info \
-	/zed/zed_node/rgb/image_rect_color \
-	/clicked_point \
-	/device_time \
-	/diagnostics \
-	/gps/fix \
-	/imu/data \
-	/rosout \
-	/rosout_agg \
-	/scaled_llh \
-	/scan \
-	/status \
-	/tf \
-	/tf_static \
-	/velocity \
-	/velodyne_nodelet_manager/bond \
-	/velodyne_nodelet_manager_driver/parameter_descriptions \
-	/velodyne_nodelet_manager_driver/parameter_updates \
-	/velodyne_nodelet_manager_laserscan/parameter_descriptions \
-	/velodyne_nodelet_manager_laserscan/parameter_updates \
-	/velodyne_nodelet_manager_transform/parameter_descriptions \
-	/velodyne_nodelet_manager_transform/parameter_updates \
-	/velodyne_packets \
-	/velodyne_points
+git clone https://github.com/ayusufsirin/loam_velodyne
+cd loam_velodyne 
+git checkout -b elastic_grandpa 3feae58fdce82f2e96bc42e70c4d30438d1c8922 
 ```
 
 # Running
+
+## Topic name/frame_id Transformer
+
+```bash
+./transformer.sh
+```
 
 ## ROS Core
 
@@ -90,8 +62,114 @@ catkin_make -DCMAKE_BUILD_TYPE=Release
 source ./devel/setup.bash
 ```
 
+#### .bashrc
+
+```bash
+cd ~/catkin_ws
+source devel/setup.bash
+```
+
+#### rtabmap
+
+* https://wiki.ros.org/rtabmap_ros/Tutorials/HandHeldMapping
+
+```bash
+roslaunch zed_wrapper zed_no_tf.launch
+rosrun dynamic_reconfigure dynparam set zed_node depth_confidence 99
+rosrun dynamic_reconfigure dynparam set zed_node depth_texture_conf 90
+rosrun dynamic_reconfigure dynparam set zed_node depth_confidence 100
+```
+
+```bash
+roslaunch rtabmap_launch rtabmap.launch \
+    rtabmap_args:="--delete_db_on_start" \
+    rgb_topic:=/zed_node/rgb/image_rect_color \
+    depth_topic:=/zed_node/depth/depth_registered \
+    camera_info_topic:=/zed_node/rgb/camera_info \
+    frame_id:=base_link \
+    approx_sync:=false \
+    wait_imu_to_init:=true \
+    imu_topic:=/zed_node/imu/data
+```
+
+ALT:
+```bash
+roslaunch zed_wrapper zed_no_tf.launch
+rosrun dynamic_reconfigure dynparam set zed/zed_node depth_confidence 99
+rosrun dynamic_reconfigure dynparam set zed/zed_node depth_texture_conf 90
+rosrun dynamic_reconfigure dynparam set zed/zed_node depth_confidence 100
+```
+
+```bash
+roslaunch rtabmap_launch rtabmap.launch \
+    rtabmap_args:="--delete_db_on_start" \
+    rgb_topic:=/zed/zed_node/rgb/image_rect_color \
+    depth_topic:=/zed/zed_node/depth/depth_registered \
+    camera_info_topic:=/zed/zed_node/rgb/camera_info \
+    frame_id:=map \
+    approx_sync:=false \
+    wait_imu_to_init:=false \
+    imu_topic:=/imu/data \
+    odom_topic:=/sdk_odom \
+    rtabmap_viz:=false \
+    rviz:=false \
+    use_sim_time:=true \
+    localization:=true
+```
+
+```bash
+roslaunch rtabmap_launch rtabmap.launch \
+   rtabmap_args:="--delete_db_on_start --Vis/CorFlowMaxLevel 5 --Stereo/MaxDisparity 200" \
+   stereo_namespace:=/zed/zed_node \
+   right_image_topic:=/zed/zed_node/right/image_rect_color \
+   left_image_topic:=/zed/zed_node/left/image_rect_color \
+   stereo:=true \
+   frame_id:=map \
+   odom_topic:=/ut_odom \
+#    use_odom_features:=true \
+```
+
+ACTUAL:
+
+```bash
+roslaunch rtabmap_launch rtabmap.launch \
+    rtabmap_args:="--delete_db_on_start" \
+    rgb_topic:=/zed/zed_node/rgb/image_rect_color \
+    depth_topic:=/zed/zed_node/depth/depth_registered \
+    camera_info_topic:=/zed/zed_node/depth/camera_info \
+    odom_topic:=/zed/zed_node/odom \
+    visual_odometry:=false \
+    frame_id:=base_link \
+    approx_sync:=false \
+    rgbd_sync:=true \
+    approx_rgbd_sync:=false
+```
+
+PG RTABMAP:
+
+```bash
+roslaunch rtabmap_launch rtabmap.launch \
+    rtabmap_args:="--delete_db_on_start" \
+    rgb_topic:=/islam/pg_rgb \
+    depth_topic:=/islam/pg_depth \
+    camera_info_topic:=/islam/pg_camera_info \
+    odom_topic:=/islam/pg_odom \
+    visual_odometry:=false \
+    frame_id:=base_link \
+    approx_sync:=false \
+    rgbd_sync:=true \
+    approx_rgbd_sync:=false
+```
+
 
 ### "loam_velodyne" Container
+
+#### .bashrc
+
+```bash
+cd ~/catkin_ws
+source devel/setup.bash
+```
 
 Now jump to another terminal session
 
@@ -111,6 +189,13 @@ roslaunch loam_velodyne loam_velodyne.launch rviz:=false
 
 > `rviz:=false` for stop openning the RViz inside Docker container.
 
+To transform the `frame_id`:
+
+```bash
+rosrun topic_tools transform /laser_cloud_surround /3d_map sensor_msgs/PointCloud2 'sensor_msgs.msg.PointCloud2(header=std_msgs.msg.Header(seq=m.header.seq,stamp=m.header.stamp,frame_id="velodyne"), data=m.data, height=m.height, width=m.width, fields=m.fields, is_bigendian=m.is_bigendian, point_step=m.point_step, row_step=m.row_step, is_dense=m.is_dense)' --import std_msgs sensor_msgs
+```
+
+
 ## ROS RPi
 
 Go to `~/Unitree/autostart/roscore/roscore.sh`:
@@ -122,11 +207,17 @@ export ROS_MASTER_URI=http://192.168.123.161:11311
 export ROS_IP=192.168.123.161
 ```
 
+
+```bash
+export ROS_MASTER_URI=http://192.168.123.1:11311
+export ROS_IP=192.168.123.11
+```
+
 to, YYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPPYYYYYYYAAAAAAAPPPPPPPPP
 
 ```bash
-export ROS_MASTER_URI=http://192.168.123.161:11311
-export ROS_IP=192.168.123.9
+export ROS_MASTER_URI=http://192.168.12.1:11311
+export ROS_IP=192.168.12.145
 ```
 
 ```bash
@@ -152,6 +243,13 @@ date
 
 ```bash
 sudo date -s "Mon Aug  12 20:14:11 UTC 2014"
+```
+
+Enable a service from SD card:
+
+```bash
+sudo ln -s /lib/systemd/system/dhcpcd.service /etc/systemd/system/dhcpcd5.service
+sudo ln -s /lib/systemd/system/dhcpcd.service /etc/systemd/system/multi-user.target.wants/dhcpcd.service
 ```
 
 
