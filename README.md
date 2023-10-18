@@ -78,6 +78,17 @@ source devel/setup.bash
 roslaunch loam_velodyne loam_velodyne.launch rviz:=false
 ```
 
+rtk
+```bash
+docker exec -it sfitc-rtk bash
+source /opt/ros/noetic/setup.bash
+cd /root/catkin_ws
+source /opt/ros/noetic/setup.bash
+source devel/setup.bash
+python3 RTK_ROS.py -s /dev/ttyUSB0 -b 115200
+python3 client_tcp-serial.py -s /dev/ttyUSB1 -i <tcp-server-ip> -b 115200
+```
+
 
 ## Development
 

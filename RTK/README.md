@@ -3,7 +3,11 @@
 
 This project establishes a unique solution to provide RTK (Real-Time Kinematic) GPS data to a quadruped robot. Due to the absence of an NTRIP client compatible with the Jetson Nano's ARM64 architecture, a series of scripts were designed to bridge the data flow between a Windows-based NTRIP client and the actual RTK GPS module connected to the Jetson Nano.
 
+## Additional ROS Packages
 
+- https://docs.ros.org/en/jade/api/robot_localization/html/index.html
+
+## Setup
 
 Before you proceed, if you're using the server script to connect to a virtual serial port, you'll need tools to create such ports:
 
