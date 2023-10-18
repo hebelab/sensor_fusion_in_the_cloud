@@ -12,6 +12,8 @@ dvc = "*"
 dvc-gdrive = "*"
 
 [dev-packages]
+ipykernel = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.8"
