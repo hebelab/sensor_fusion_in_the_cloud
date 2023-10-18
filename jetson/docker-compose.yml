@@ -12,7 +12,7 @@ services:
     command: stdbuf -o L roscore
 
   vlp:
-    image: sfitc-vlp:latest
+    image: yusufsirin/sfitc-vlp:jp4.6.1
     # build: ./vlp
     container_name: sfitc-vlp-jetson
     network_mode: host
@@ -29,7 +29,7 @@ services:
     entrypoint: /vlp/entrypoint.sh
 
   rtk:
-    image: sfitc-rtk:ntrip-ros
+    image: yusufsirin/sfitc-rtk:ntrip-ros
     container_name: sfitc-rtk-jetson
     network_mode: host
     restart: always
