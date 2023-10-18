@@ -2,7 +2,6 @@
 /.idea/
 *.lock
 *.csv
-
 draft/
 
 # Platform Specific

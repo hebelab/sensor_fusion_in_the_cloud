@@ -38,7 +38,7 @@ def serial_to_tcp(tcp_socket):
     while True:
         data = ser.read(BUFFER_SIZE)
         if data:
-            print("serial2tcp: ", data)
+#            print("serial2tcp: ", data)
             tcp_socket.send(data)
 
 # Function to handle data transfer from TCP to serial port
@@ -46,7 +46,7 @@ def tcp_to_serial(tcp_socket):
     while True:
         data = tcp_socket.recv(BUFFER_SIZE)
         if data:
-            print("tcp2serial: ", data)
+#            print("tcp2serial: ", data)
             ser.write(data)
 
 try:
