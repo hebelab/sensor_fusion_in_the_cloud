@@ -1,49 +1,95 @@
 version: '3'
 
 services: 
+  rosmaster:
+    image: ros:kinetic-ros-core
+    container_name: sfitc-rosmaster-jetson
+    network_mode: host
+    restart: always
+    environment:
+      - ROS_MASTER_URI=${ROS_MASTER_URI}
+      - ROS_IP=${ROS_IP}
+    command: stdbuf -o L roscore
+
   vlp:
     image: sfitc-vlp:latest
     # build: ./vlp
     container_name: sfitc-vlp-jetson
     network_mode: host
-    # restart: always
+    restart: always
+    depends_on: [rosmaster]
     privileged: true
     volumes:
       - ./vlp/entrypoint.sh:/vlp/entrypoint.sh
     environment:
-      - ROS_MASTER_URI=http://0.0.0.0:11311
-      - ROS_IP=0.0.0.0
-    # stdin_open: true
-    # tty: true
-    # entrypoint: /bin/bash
+      - ROS_MASTER_URI=${ROS_MASTER_URI}
+      - ROS_IP=${ROS_IP}
+      - VLP_IP=${VLP_IP}
+      - VLP_STREAM_PORT=${VLP_STREAM_PORT}
     entrypoint: /vlp/entrypoint.sh
 
-  # zed:
-  #   image: sfitc-zed:raw
-  #   container_name: sfitc-zed-jetson
-  #   network_mode: host
-  #   # restart: always
-  #   # privileged: true
-  #   environment:
-  #     - ROS_MASTER_URI=http://0.0.0.0:11311
-  #     - ROS_IP=0.0.0.0
-  #   # stdin_open: true
-  #   # tty: true
-  #   command: /bin/bash
-
   rtk:
-    image: sfitc-rtk:latest
+    image: sfitc-rtk:ntrip-ros
     container_name: sfitc-rtk-jetson
     network_mode: host
-    # restart: always
+    restart: always
     privileged: true
+    depends_on: [rosmaster]
     environment:
-      - ROS_MASTER_URI=http://0.0.0.0:11311
-      - ROS_IP=0.0.0.0
+      - ROS_MASTER_URI=${ROS_MASTER_URI}
+      - ROS_IP=${ROS_IP}
     volumes:
       - /dev/bus/usb:/dev/bus/usb
       - ../RTK:/RTK
       - ./rtk:/rtk
+    entrypoint: /rtk/entrypoint.sh
+
+  # zed:
+  #   image: yusufsirin/sfitc-zed:jp4.6_zed-ros-wrapper-builtin
+  #   # build: ./zed
+  #   container_name: sfitc-zed-jetson
+  #   network_mode: host
+  #   # restart: always
+  #   privileged: true
+  #   depends_on: [rosmaster]
+  #   environment:
+  #     # - DISPLAY=${DISPLAY}
+  #     - ROS_MASTER_URI=${ROS_MASTER_URI}
+  #     - ROS_IP=${ROS_IP}
+  #   volumes:
+  #     # - /tmp/.X11-unix:/tmp/.X11-unix:rw
+  #     - ./zed/catkin_ws:/root/catkin_ws
+  #     - ./zed/entrypoint.sh:/zed/entrypoint.sh
+  #   entrypoint: /zed/entrypoint.sh
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
+
+  zed-streamer:
+    image: yusufsirin/sfitc-zed-streamer:4.0-tools-devel-jetson-jp4.6.1 
+    # build: ./zed-streamer
+    container_name: sfitc-zed-streamer-jetson
+    network_mode: host
+    restart: always
+    privileged: true
+    environment:
+      # - DISPLAY=${DISPLAY}
+      - ZED_STREAM_PORT=${ZED_STREAM_PORT}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./zed-streamer/entrypoint.sh:/zed-streamer/entrypoint.sh
+    entrypoint: /zed-streamer/entrypoint.sh
     # stdin_open: true
     # tty: true
-    entrypoint: /rtk/entrypoint.sh
+    # command: /bin/bash
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
