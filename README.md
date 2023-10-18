@@ -21,6 +21,19 @@ docker tag yusufsirin/sfitc-loam_velodyne sfitc-loam_velodyne
 docker rmi yusufsirin/sfitc-zed yusufsirin/sfitc-vlp yusufsirin/sfitc-loam_velodyne
 ```
 
+Clone Jetson Docker images:
+
+```bash
+docker pull ertugrultiyek/sfitc-zed:raw
+```
+
+Push new containers:
+
+```bash
+docker tag sfitc-vlp yusufsirin/sfitc-vlp:latest
+docker push yusufsirin/sfitc-vlp:latest
+```
+
 
 ## Running
 
@@ -44,6 +57,25 @@ vlp
 ```bash
 docker exec -it sfitc-vlp bash
 roslaunch velodyne_pointcloud VLP16_points.launch
+# OR
+roslaunch velodyne_pointcloud VLP16_points.launch device_ip:="192.168.0.200" frame_id:="map" port:="2368"
+roslaunch velodyne_pointcloud VLP16_points.launch pcap:=$(pwd)/2023-03-20-21-12-56_Velodyne-VLP-16-Data.pcap frame_id:="map"
+```
+
+Simulate Velodyne Lidar UDP broadcast
+
+> https://github.com/rigtorp/udpreplay
+
+```bash
+sudo udpreplay -i enp61s0 2023-03-20-21-12-56_Velodyne-VLP-16-Data.pcap -b
+```
+
+loam_velodyne
+```bash
+docker exec -it sfitc-vlp bash
+source /opt/ros/indigo/setup.bash 
+source devel/setup.bash
+roslaunch loam_velodyne loam_velodyne.launch rviz:=false
 ```
 
 
