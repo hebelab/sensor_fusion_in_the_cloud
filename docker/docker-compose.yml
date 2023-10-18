@@ -1,36 +1,29 @@
 version: '3'
 
 services:
-  loam_velodyne:
-    image: sfitc-loam_velodyne
-    container_name: sfitc-loam_velodyne
+  rosmaster:
+    image: ros:kinetic-ros-core
+    container_name: sfitc-rosmaster
     network_mode: host
+    restart: on-failure
     environment:
-      - ROS_MASTER_URI=http://0.0.0.0:11311
-      - ROS_IP=0.0.0.0
-    volumes:
-      - ./loam_velodyne/catkin_ws:/root/catkin_ws
-    stdin_open: true
-    tty: true
-    command: /bin/bash
+      - ROS_MASTER_URI=${ROS_MSTR_URI}
+      - ROS_IP=${ROS_IP}
+    command: stdbuf -o L roscore
 
-  # rtabmap:
-  #   image: sfitc-rtabmap
-  #   container_name: sfitc-rtabmap
-  #   network_mode: host
-  #   privileged: true
-  #   environment:
-  #     - ROS_MASTER_URI=http://0.0.0.0:11311
-  #     - ROS_IP=0.0.0.0
-  #     - DISPLAY=${DISPLAY}
-  #     - XAUTHORITY=/tmp/.docker.xauth
-  #     - QT_X11_NO_MITSHM=1
-  #   volumes:
-  #     - ./rtabmap/catkin_ws:/root/catkin_ws
-  #     - /tmp/.X11-unix:/tmp/.X11-unix:rw
-  #     - /tmp/.docker.xauth:/tmp/.docker.xauth
+# TODO> Create this for main sensor fusion operations
+  # main:
+  #   image: nvidia/cuda:10.2-base
+  #   container_name: sfitc-main
   #   stdin_open: true
   #   tty: true
+  #   network_mode: host
+  #   environment:
+  #     - ROS_MASTER_URI=${ROS_MSTR_URI}
+  #     - ROS_IP=${ROS_IP}
+  #   volumes:
+  #     - ./main:/app
+  #   working_dir: /app
   #   command: /bin/bash
   #   deploy:
   #     resources:
@@ -40,18 +33,84 @@ services:
   #             count: 1
   #             capabilities: [gpu]
 
+  loam_velodyne:
+    image: sfitc-loam_velodyne
+    container_name: sfitc-loam_velodyne
+    network_mode: host
+    environment:
+      - ROS_MASTER_URI=${ROS_MSTR_URI}
+      - ROS_IP=${ROS_IP}
+    volumes:
+      - ./loam_velodyne/catkin_ws:/root/catkin_ws
+      - ./loam_velodyne/entrypoint.sh:/loam_velodyne/entrypoint.sh
+    entrypoint: /loam_velodyne/entrypoint.sh  
+    # stdin_open: true
+    # tty: true
+    # command: /bin/bash  
+
+  vlp:
+    image: sfitc-vlp:latest
+    # build: ./vlp
+    container_name: sfitc-vlp
+    network_mode: host
+    restart: on-failure
+    privileged: true
+    volumes:
+      - ./vlp/entrypoint.sh:/vlp/entrypoint.sh
+    environment:
+      - ROS_MASTER_URI=${ROS_MSTR_URI}
+      - ROS_IP=${ROS_IP}
+      - VLP_PORT=${VLP_PORT}
+      - SENSOR_SUIT_IP=${SENSOR_SUIT_IP}
+    entrypoint: /vlp/entrypoint.sh
+    # stdin_open: true
+    # tty: true
+    # command: /bin/bash
+
   zed:
-    image: sfitc-zed
+    image: yusufsirin/sfitc-zed:3.8-gl-devel-cuda11.4-ubuntu20.04
+    # build: ./zed
     container_name: sfitc-zed
+    network_mode: host
+    restart: on-failure
+    privileged: true
+    environment:
+      - ROS_MASTER_URI=${ROS_MSTR_URI}
+      - ROS_IP=${ROS_IP}
+      - DISPLAY=${DISPLAY}
+      - ZED_STREAM_PORT=${ZED_STREAM_PORT}
+      - SENSOR_SUIT_IP=${SENSOR_SUIT_IP}
+    volumes:
+      - ./zed/entrypoint.sh:/zed/entrypoint.sh
+      - ./zed/catkin_ws:/root/catkin_ws
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    entrypoint: /zed/entrypoint.sh
+    # stdin_open: true
+    # tty: true
+    # command: /bin/bash
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  rtabmap:
+    image: sfitc-rtabmap
+    container_name: sfitc-rtabmap
     network_mode: host
     privileged: true
     environment:
-      - ROS_MASTER_URI=http://0.0.0.0:11311
-      - ROS_IP=0.0.0.0
+      - ROS_MASTER_URI=${ROS_MSTR_URI}
+      - ROS_IP=${ROS_IP}
       - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/tmp/.docker.xauth
+      - QT_X11_NO_MITSHM=1
     volumes:
-      - ./zed/catkin_ws:/root/catkin_ws
+      - ./rtabmap/catkin_ws:/root/catkin_ws
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth
     stdin_open: true
     tty: true
     command: /bin/bash
@@ -63,29 +122,24 @@ services:
               count: 1
               capabilities: [gpu]
 
-  vlp:
-    image: sfitc-vlp
-    container_name: sfitc-vlp
+  rtk:
+    image: yusufsirin/sfitc-rtk:amd64
+    # build: ./rtk
+    container_name: sfitc-rtk
     network_mode: host
-    # restart: always
+    restart: on-failure
     privileged: true
+    volumes:
+      - ./rtk/entrypoint.sh:/rtk/entrypoint.sh
+      - ./rtk/catkin_ws:/root/catkin_ws
+      - /dev/:/dev/
     environment:
-      - ROS_MASTER_URI=http://0.0.0.0:11311
-      - ROS_IP=0.0.0.0
-
-  # main:
-  #   image: nvidia/cuda:10.2-base
-  #   container_name: sfitc-main
-  #   stdin_open: true
-  #   tty: true
-  #   command: /bin/bash
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - driver: nvidia
-  #             count: 1
-  #             capabilities: [gpu]
+      - ROS_MASTER_URI=${ROS_MSTR_URI}
+      - ROS_IP=${ROS_IP}
+    entrypoint: /rtk/entrypoint.sh
+    # stdin_open: true
+    # tty: true
+    # command: echo Hi
 
   ### Docker "run"
   # docker run -d --name sfitc-vlp -e ROS_MASTER_URI=http://192.168.123.161:11311 -e ROS_IP=192.168.123.13 --net host --restart always sfitc-vlp-arm64
