@@ -35,6 +35,7 @@ services:
 
   loam_velodyne:
     image: sfitc-loam_velodyne
+    # build: ./loam_velodyne
     container_name: sfitc-loam_velodyne
     network_mode: host
     environment:
