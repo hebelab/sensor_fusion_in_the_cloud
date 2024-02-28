@@ -11,7 +11,7 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Bismillahirrahmanirrahim iSLAM\\
+\title{Enhancing Depth Estimation with Iterative Stereo-LiDAR Fusion:An Application of the Papoulis-Gerchberg Algorithm\\
 {\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
 should not be used}
 \thanks{Identify applicable funding agency here. If none, delete this.}
@@ -68,9 +68,25 @@ Our work diverges from these DNN-heavy strategies by employing the Papoulis-Gerc
 \section{Technical Approach}
 %% In this section explain the each step of the processing detaily.
 
-Our approach is based on the PG method that is commonly used for kayıplı sinyal kestirimi in communications systems. The method is applicable for 1D signals, originally. The 2D implementation of it is required for us. There are some works on implementation to 2D of PG. 
+The Papoulis-Gerchberg (PG) algorithm is an iterative technique employed in signal processing to perform band-limited signal extrapolation. This method enables the estimation of missing portions of a signal based on a limited segment of the original data and the knowledge of its bandwidth.
 
-An application of this algorithm is used for image inpainting by \cite{pg-image-inpaint-2009}. They introduce the PG for this specific scenerio but it has some precautions to use for us. The images they used are extremely dense when comparing with the Lidar. Also, they have single sensory image but we need to optain a fusion. 
+The PG algorithm operates through an iterative process involving two key steps:
+
+\begin{enumerate}
+    \item Constraint Enforcement in the Spatial Domain:
+    The initial step involves enforcing the known samples of the signal. This is achieved by transforming the estimated spectrum (obtained through techniques like the Fourier transform) of the signal and modifying it to ensure it aligns with the known Fourier Transform values corresponding to the available samples.
+    
+    \item Constraint Enforcement in the Frequency Domain:
+    The second step focuses on enforcing the known bandwidth constraint. This is implemented by modifying the signal's estimated version in the spatial domain (e.g., time domain for time-based signals) to guarantee it adheres to the specified bandwidth limitations.
+\end{enumerate}
+These two steps are repeated iteratively. As each iteration progresses, the estimated signal progressively converges towards the original signal, ultimately resulting in an extrapolated version that replenishes the missing data points.
+
+Further works opened the papoulis-gerchberg algorithm new using areas like signal restoration and image processing.
+%% Our approach is based on the PG method that is commonly used for estimation and reconstruction of lossy signals in communications systems. The method is applicable for 1D signals, originally. The 2D implementation of it is required for us. There are some works on implementation to 2D of PG. 
+
+%% Paper about signal restoration
+%% Paper about super resolution
+Another application of this algorithm is used for image inpainting by \cite{pg-image-inpaint-2009}. They introduce the PG for this specific scenerio but it has some precautions to use for us. The images they used are extremely dense when comparing with the Lidar. Also, they have single sensory image but we need to optain a fusion. 
 
 Another work done by \cite{ozbay2015high} that introduce an extended version of PG for 3D point cloud data that is driven by a Lidar sensor. They use this as an upsampling to cope with delayed points when using Lidar in high resolution mode due to the low scan rates of cylindirical scanning ones. But appearantly, it also use single sensory system
 
@@ -86,7 +102,8 @@ REVISE - To make these two sensor data processable in a domain, we determine a c
 
 \paragraph{Obtaining Depth Frame From Lidar Data}
 
-After making the calibrations for stereo camera and the Lidar, we know all the transformation matrices to generate the depth image from point cloud data. To project the 3D points into the 2D depth frame space we use the intrinsic parameters and the known transformation matrices.
+After making the calibrations for stereo camera and the Lidar, we know all the transformation matrices to generate the depth image from point cloud data. To project the 3D points into the 2D depth frame space we use the pinhole camera model. 
+%% TODO: Pinhole camera model daha mu uygun? use the intrinsic parameters and the known transformation matrices.
 
 \paragraph{Lidar Null Mask}
 
@@ -104,10 +121,13 @@ After making the calibrations for stereo camera and the Lidar, we know all the t
 \subsection{Post-Proc}
 \subsubsection{Removal of Trivial Aumented Data}
 
-\section{Implementation}
+\section{Implementation} \label{implementation}
 \subsection{Adopting the Algorithm to Linear Algebra}
 
 \section{Optimization}
+
+As defined in the previous section \ref{implementation}, our method is developed baed on the linear algebraic methods. Using the nature of the linear algebra, we introduce a parallel processing approach for our extended PG method. This introduce us a workspace that we can competite with our fellows (Buraya DNN gibi yapıları kullanarak GPU üzerinde koşan sensor fusion paperlarına alıntı yapılacak)
+
 \subsection{GPU Acceleration}
 \subsection{Cloud Computing}
 
