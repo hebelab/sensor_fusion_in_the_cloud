@@ -79,6 +79,7 @@ The PG algorithm operates through an iterative process involving two key steps:
     \item Constraint Enforcement in the Frequency Domain:
     The second step focuses on enforcing the known bandwidth constraint. This is implemented by modifying the signal's estimated version in the spatial domain (e.g., time domain for time-based signals) to guarantee it adheres to the specified bandwidth limitations.
 \end{enumerate}
+
 These two steps are repeated iteratively. As each iteration progresses, the estimated signal progressively converges towards the original signal, ultimately resulting in an extrapolated version that replenishes the missing data points.
 
 Further works opened the papoulis-gerchberg algorithm new using areas like signal restoration and image processing.
@@ -94,9 +95,15 @@ The utilization of the Papoulis-Gerchberg (PG) algorithm within our framework is
 
 \subsection{Pre-Processing}
 
-Due to the fundamental difference in the representation of depth information between LiDAR measurements (point cloud) and stereo depth estimation (dense disparity maps), both data modalities necessitate preprocessing steps involving transformation, conversion, and upsampling to facilitate their integration and subsequent processing.
+The fusion of data from heterogeneous sensor systems, such as LiDAR and stereo cameras, presents a unique set of challenges, primarily due to the fundamental differences in their respective depth information representations. LiDAR sensors provide sparse but highly accurate point clouds, whereas stereo vision techniques yield dense disparity maps with varying degrees of precision. To effectively integrate these diverse data modalities, a comprehensive pre-processing regimen is indispensable. This regimen encompasses transformation, conversion, and upsampling procedures designed to standardize the data, thereby laying the groundwork for their combined analysis.
 
-REVISE - To make these two sensor data processable in a domain, we determine a common modality for these images. This modality is single channel depth image format. The RGB integration wont necessite for using our algorithm.
+Transformation and Conversion: The initial step involves transforming the LiDAR-generated point clouds and stereo vision-produced disparity maps into a uniform format. We opt for the single-channel depth image format as this common ground facilitates the merging process. This transformation is critical not only for aligning the data spatially but also for ensuring that subsequent processing stages operate on data that are consistent in terms of dimensionality and scale.
+
+Upsampling: Given the sparse nature of LiDAR data compared to the relatively denser outputs from stereo vision, upsampling is employed to increase the resolution of the LiDAR measurements. This step is crucial for achieving a density comparable to that of the stereo disparity maps, thereby enhancing the reliability of the fused depth information. Upsampling is carefully executed to preserve the integrity of the LiDAR data, ensuring that the enhanced resolution does not compromise the accuracy inherent to LiDAR measurements.
+
+RGB Integration Exclusion: It is worth noting that our approach does not necessitate the integration of RGB data. This decision streamlines the preprocessing phase, focusing solely on depth information, which is paramount for our application. The exclusion of RGB data underscores our methodology's emphasis on depth accuracy and computational efficiency, aligning with the objective of developing a lightweight and practical fusion algorithm.
+
+By meticulously addressing these preprocessing steps, we ensure that the LiDAR and stereo depth data are optimally prepared for fusion. This preparation is vital for the successful application of our novel algorithm, which leverages the strengths of both sensor types to produce depth estimations of unparalleled accuracy and density.
 
 \subsubsection{Data Cropping}
 
@@ -109,11 +116,11 @@ Stereo depth augmentation requirement is originated from the deficit nature of t
 We proposed a method to overcome the null value problem. This method fills the gaps (null values at the depth images) by using the LiDAR measurements. Firstly, a segmentation of the gaps are made and then the LiDAR measurements are taken into account to fill the gap segments that are overlapped with LiDAR measurements. Again, due to the sparse nature of the LiDAR measurements, we made a interpolation for filling the huge gaps by using LiDAR measurements that have small area. 
 
 
-\paragraph{Obtaining Depth Frame From LiDAR Data}
+\subsubsection{Obtaining Depth Frame From LiDAR Data}
 
 After making the calibrations for stereo camera and the LiDAR, we know all the transformation matrices to generate the depth image from point cloud data. To project the 3D points into the 2D depth frame space we use the pinhole camera model. 
 
-\paragraph{LiDAR Null Mask}
+\subsubsection{LiDAR Null Mask}
 
 The LiDAR depth frames will have null values do to the nature of the projection of sparse point cloud data into a plane. This null values should be considered before using the LiDAR depth map in the algorithm.
 
