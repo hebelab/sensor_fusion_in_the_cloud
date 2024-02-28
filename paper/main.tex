@@ -148,7 +148,11 @@ As the purpose of this study is to investigate the potential of integrating data
 Basically the method is nothing but proposing the background of lidar measurements as depth frame from stereo pair instead of using only a mean value. Since the background filling is not non-significant data, we have mostly overcame the problem with sparsity of LiDAR measurements.
 We also made some modifications and improvements to the standard 2D Papoulish-Gerchberg algorithm to match our needs better.
 \paragraph{Use of Band Reject Filter in PG}
-As the nature of the low pass filters used in papoulis-gerchberg algorithm, they all eliminate the high frequency components as they meant to be. But in our case, our data also need to be having high frequency components 
+As the nature of the low pass filters used in papoulis-gerchberg algorithm, they all eliminate the high frequency components as they meant to be. But in our case, the data shouldnt be losing these high frequency components. Normally papoulis-gerchberg algorithm assumes a continuous signal can't have sharp transitions. Sharp transitions meant to be losses of the signal, so papoulis-gerchberg algorithm tries to reconstruct the image by eliminating high frequency components.
+In our case the high frequency components or sharp transitions meant to be the transition between foreground to background, so we don't want to lose this information.
+To overcome this problem we proposed to use band-reject filter that allows higher and lower frequency components to pass, only mid frequencies to reject. mid frequencies assumed to be the differences between LiDAR measurements and estimated depth information from stereo pair. Iteratively applying this filter and placing Lidar points as anchors makes the estimation closer to the lidar's accuracy.
+
+
 \paragraph{Evaluated PG for Our Work}
 
 \subsection{Post-Proc}
