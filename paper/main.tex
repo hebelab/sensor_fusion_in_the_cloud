@@ -105,28 +105,31 @@ RGB Integration Exclusion: It is worth noting that our approach does not necessi
 
 By meticulously addressing these preprocessing steps, we ensure that the LiDAR and stereo depth data are optimally prepared for fusion. This preparation is vital for the successful application of our novel algorithm, which leverages the strengths of both sensor types to produce depth estimations of unparalleled accuracy and density.
 
-\subsubsection{Data Cropping}
-
-After projecting the LiDAR image onto the stereo depth image plane, there are some remaining problems. One of them is the boundaries of the depth regions. Since the vertical scan area of the lidar sensor is pretty small (like 30 degrees) we have to crop the stereo depth image also. On the other hand, the stereo depth image have a bound smaller than the lidar scan at the on the horzontal axis. This is appearent, because the lidar horizontal scan area is 360 degrees. Since our algorithm is based on depth images and there are no memories for previously detected points for the frame sensor fusioning, we just ignore this non-overlapping depth data regions.
-
-\subsubsection{Data Augmentation}
-
-Stereo depth augmentation requirement is originated from the deficit nature of the disparity maps that are used in depth estimation from stereo cameras. The depth images, due to the disparity maps, have some null values at blind spots that one of the cameras have no view at all. These null values at the depth images should be pre-processed before the PG algorithm to avoid the distortion of the well estimated depth entities (pixels).
-
-We proposed a method to overcome the null value problem. This method fills the gaps (null values at the depth images) by using the LiDAR measurements. Firstly, a segmentation of the gaps are made and then the LiDAR measurements are taken into account to fill the gap segments that are overlapped with LiDAR measurements. Again, due to the sparse nature of the LiDAR measurements, we made a interpolation for filling the huge gaps by using LiDAR measurements that have small area. 
-
-
 \subsubsection{Obtaining Depth Frame From LiDAR Data}
 
-After making the calibrations for stereo camera and the LiDAR, we know all the transformation matrices to generate the depth image from point cloud data. To project the 3D points into the 2D depth frame space we use the pinhole camera model. 
+Subsequent to the calibration of the stereo camera and LiDAR sensor, the transformation matrices essential for converting point cloud data into a depth image are established. The conversion employs the pinhole camera model to accurately project three-dimensional points onto a two-dimensional depth frame space. This process is fundamental in translating the spatial coordinates of LiDAR measurements into a format that is compatible with stereo vision data, thereby facilitating their integration.
+
+\subsubsection{Data Cropping}
+
+Projection of LiDAR data onto the stereo depth image plane reveals discrepancies in the boundary extents of the depth regions. This is particularly evident in the vertical scan range of the LiDAR sensor, which is relatively narrow (approximately 30 degrees) compared to the broader field of view captured by the stereo camera. Consequently, it becomes necessary to crop the stereo depth image to match the LiDAR's scan area. Moreover, the stereo depth image exhibits a narrower horizontal boundary compared to the LiDAR's 360-degree scanning capability. Given our algorithm's reliance on depth images and the absence of memory for previously detected points in frame sensor fusion, non-overlapping depth data regions are disregarded to maintain algorithmic integrity and focus on the fusion of congruent depth information.
+
+\subsubsection{Data Augmentation (Stereo Infill)}
+
+The augmentation of stereo depth data addresses the challenge posed by inherent limitations in stereo vision disparity maps, which frequently exhibit null values in occluded regions not visible to one or both of the stereo cameras. These occlusions result in incomplete depth information, manifesting as gaps in the depth images derived from stereo vision. To rectify this and ensure a comprehensive depth field, our method incorporates a strategic process of gap filling that leverages high-confidence LiDAR measurements.
+
+Gap Segmentation and Identification: The initial phase involves a meticulous analysis of the stereo depth images to segment and identify areas devoid of depth information—these are the regions where disparity maps fail to provide reliable depth due to occlusions or insufficient texture.
+
+LiDAR Measurement Integration: Upon identifying these gaps, the process proceeds by overlaying LiDAR data onto the stereo depth images. This step utilizes the precise depth information from LiDAR measurements to fill in the identified gaps, prioritizing regions where LiDAR data overlaps with the gaps in stereo images. This integration capitalizes on the accuracy and reliability of LiDAR measurements to enhance the fidelity of the depth information in areas previously marked by uncertainty.
+
+Interpolation for Comprehensive Coverage: Recognizing the sparse nature of LiDAR data and its inability to cover all gaps fully, we employ interpolation techniques as a subsequent measure. This approach extrapolates the available LiDAR measurements to fill larger gaps, ensuring that even areas without direct LiDAR coverage receive enhanced depth estimations. The interpolation considers the spatial distribution of LiDAR points and the surrounding depth context to generate a coherent depth field that bridges the disparity-induced gaps with plausible depth values.
+
+This augmented approach to stereo depth infill not only rectifies the limitations inherent in stereo disparity maps but also enhances the overall depth accuracy of the fused stereo-LiDAR image. By meticulously integrating and interpolating LiDAR data within the stereo depth framework, we achieve a more robust and complete representation of the scene's depth, paving the way for improved performance in subsequent processing stages of our sensor fusion algorithm.
+
+This phase represents a pivotal component of our preprocessing strategy, primarily due to its critical role in safeguarding the integrity of the Papoulis-Gerchberg (PG) algorithm's iterative process. In the absence of this meticulous data augmentation step, the iterative nature of the PG algorithm could inadvertently exacerbate depth estimation errors with each subsequent iteration. Specifically, unaddressed gaps in the stereo depth images could lead to erroneous propagation and amplification of inaccuracies, undermining the algorithm's ability to refine and converge towards a precise depth map. Therefore, by ensuring that these gaps are effectively filled through the integration and interpolation of LiDAR data, we substantially enhance the stability and accuracy of the depth estimation process, particularly as the number of iterations increases. This augmentation is not merely a preparatory measure but a fundamental prerequisite for harnessing the full potential of the PG algorithm in achieving high-fidelity depth estimations from fused stereo-LiDAR data.
 
 \subsubsection{LiDAR Null Mask}
 
-The LiDAR depth frames will have null values do to the nature of the projection of sparse point cloud data into a plane. This null values should be considered before using the LiDAR depth map in the algorithm.
-
-Since, our method use the stereo depth maps as a starting point and LiDAR depth map as rectifier of depth information of these stereo depth images, we need a mask of null values to eliminate the spurious pixels (depth entities) at the post-processing part of our algorithm.
-
-\paragraph{Stereo Infill}
+The projection of sparse LiDAR point cloud data onto a two-dimensional plane inherently results in the presence of null values within the depth frames. These null values must be meticulously accounted for prior to the integration of LiDAR depth maps into our fusion algorithm. To address this, we employ a null value mask for the LiDAR depth data, which serves to identify and subsequently exclude spurious depth entities from the fused depth estimation. This preprocessing step is crucial for refining the depth information derived from stereo depth maps, utilizing the LiDAR data as a corrective measure to enhance the fidelity of the resultant depth image.
 
 \subsection{PG: Papoulis Gerchberg}
 We first intended to use Papoulish-Gerchberg algorithm as a pre-processing method to up sample the only LiDAR data. But the sparsity of the LiDAR data made it challenging to work with.
@@ -145,6 +148,7 @@ As the purpose of this study is to investigate the potential of integrating data
 Basically the method is nothing but proposing the background of lidar measurements as depth frame from stereo pair instead of using only a mean value. Since the background filling is not non-significant data, we have mostly overcame the problem with sparsity of LiDAR measurements.
 We also made some modifications and improvements to the standard 2D Papoulish-Gerchberg algorithm to match our needs better.
 \paragraph{Use of Band Reject Filter in PG}
+As the nature of the low pass filters used in papoulis-gerchberg algorithm, they all eliminate the high frequency components as they meant to be. But in our case, our data also need to be having high frequency components 
 \paragraph{Evaluated PG for Our Work}
 
 \subsection{Post-Proc}
