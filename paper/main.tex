@@ -11,7 +11,7 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Enhancing Depth Estimation with Iterative Stereo-LiDAR Fusion:An Application of the Papoulis-Gerchberg Algorithm\\
+\title{Enhancing Depth Estimation with Iterative Stereo-LiDAR Fusion: An Application of the Papoulis-Gerchberg Algorithm\\
 {\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
 should not be used}
 \thanks{Identify applicable funding agency here. If none, delete this.}
@@ -100,6 +100,11 @@ Due to the fundamental difference in the representation of depth information bet
 
 REVISE - To make these two sensor data processable in a domain, we determine a common modality for these images. This modality is single channel depth image format. The RGB integration wont necessite for using our algorithm.
 
+Stereo depth augmentation requirement is originated from the deficit nature of the disparity maps that are used in depth estimation from stereo cameras. The depth images, due to the disparity maps, have some null values at blind spots that one of the cameras have no view at all. These null values at the depth images should be pre-processed before the PG algorithm to avoid the distortion of the well estimated depth entities (pixels).
+
+We proposed a method to overcome the null value problem. This method fills the gaps (null values at the depth images) by using the lidar measurements. Firstly, a segmentation of the gaps are made and then the lidar measurements are taken into account to fill the gap segments that are overlapped with lidar measurements. Again, due to the sparse nature of the lidar measurements, we made a interpolation for filling the huge gaps by using lidar measurements that have small area. 
+
+
 \paragraph{Obtaining Depth Frame From Lidar Data}
 
 After making the calibrations for stereo camera and the Lidar, we know all the transformation matrices to generate the depth image from point cloud data. To project the 3D points into the 2D depth frame space we use the pinhole camera model. 
@@ -107,7 +112,9 @@ After making the calibrations for stereo camera and the Lidar, we know all the t
 
 \paragraph{Lidar Null Mask}
 
+The lidar depth frames will have null values do to the nature of the projection of sparse point cloud data into a plane. This null values should be considered before using the lidar depth map in the algorithm.
 
+Since, our method use the stereo depth maps as a starting point and lidar depth map as rectifier of depth information of these stereo depth images, we need a mask of null values to eliminate the spurious pixels (depth entities) at the post-processing part of our algorithm.
 
 \paragraph{Stereo Infill}
 
