@@ -59,20 +59,46 @@ The following sections will outline the current landscape of depth sensing and f
 
 \section{Related Works}
 
-Stereo matching and depth estimation are pivotal in applications such as autonomous driving and robotic navigation. Traditional methods, as outlined by Scharstein and Szeliski (2002), have evolved with the adoption of Deep Neural Network (DNN) techniques, significantly enhancing accuracy (Zbontar & LeCun, 2016). However, the computational demands of these DNN solutions often outpace the capabilities of onboard systems in real-time scenarios (Shamsafar et al., 2022; Rahim et al., 2021).
+Stereo matching and depth estimation are pivotal in applications such as autonomous driving and robotic navigation. Traditional methods, as outlined by Scharstein and Szeliski (2002), have evolved with the adoption of Deep Neural Network (DNN) techniques, significantly enhancing accuracy (Zbontar \& LeCun, 2016). However, the computational demands of these DNN solutions often outpace the capabilities of onboard systems in real-time scenarios (Shamsafar et al., 2022; Rahim et al., 2021).
 
 In the realm of stereo-LiDAR fusion, approaches like those proposed by Parks et al. (2018) and Park et al. (2019) augment stereo disparity with LiDAR data but fail to fully exploit the precision of LiDAR. Choe et al. (2021) and Yang et al. (2019) introduce architectures that incorporate LiDAR data into early stages of depth estimation but often at a sacrifice of either depth integration or accuracy. Other methods, such as those by Mai et al. (2021) and Li and Cao (2020), achieve higher accuracy but at the cost of increased computational load, which is not conducive to real-time application.
 
 Our work diverges from these DNN-heavy strategies by employing the Papoulis-Gerchberg algorithm, a technique historically utilized in signal processing for super-resolution, adapted here for sensor fusion. This approach circumvents the prohibitive computational demands of DNNs, offering a lightweight yet robust alternative for real-time, accurate depth estimation from stereo-LiDAR data fusion.
 
 \section{Technical Approach}
+%% In this section explain the each step of the processing detaily.
+
+Our approach is based on the PG method that is commonly used for kayıplı sinyal kestirimi in communications systems. The method is applicable for 1D signals, originally. The 2D implementation of it is required for us. There are some works on implementation to 2D of PG. 
+
+An application of this algorithm is used for image inpainting by \cite{pg-image-inpaint-2009}. They introduce the PG for this specific scenerio but it has some precautions to use for us. The images they used are extremely dense when comparing with the Lidar. Also, they have single sensory image but we need to optain a fusion. 
+
+Another work done by \cite{ozbay2015high} that introduce an extended version of PG for 3D point cloud data that is driven by a Lidar sensor. They use this as an upsampling to cope with delayed points when using Lidar in high resolution mode due to the low scan rates of cylindirical scanning ones. But appearantly, it also use single sensory system
+
+We introduce our novel approach my putting another extension of PG to the litarature that is the first one uses multi-sensory system. The nature of PG consists some elements. 
+
+%% PG açıklaması başta olsa daha iyi olabilir.
+
 \subsection{Pre-Processing}
 \subsubsection{Data Augmentation}
-\subsubsection{Stereo Infill}
-\subsubsection{Lidar Null Mask}
+Due to the fundamental difference in the representation of depth information between liDAR measurements (point cloud) and stereo depth estimation (dense disparity maps), both data modalities necessitate preprocessing steps involving transformation, conversion, and upsampling to facilitate their integration and subsequent processing.
+
+REVISE - To make these two sensor data processable in a domain, we determine a common modality for these images. This modality is single channel depth image format. The RGB integration wont necessite for using our algorithm.
+
+\paragraph{Obtaining Depth Frame From Lidar Data}
+
+After making the calibrations for stereo camera and the Lidar, we know all the transformation matrices to generate the depth image from point cloud data. To project the 3D points into the 2D depth frame space we use the intrinsic parameters and the known transformation matrices.
+
+\paragraph{Lidar Null Mask}
+
+
+
+\paragraph{Stereo Infill}
+
 \subsection{PG: Papoulis GerchBerg}
-\subsubsection{PG Background}
-\subsubsection{our Approach}
+%% \subsubsection{PG Background}
+%% Cite other papers about papoulis gerchberg, super resolution
+
+\subsubsection{Our Approach}
 \subsubsection{Use of Band Reject Filter in PG}
 \subsubsection{Evaluated PG for Our Work}
 \subsection{Post-Proc}
@@ -98,7 +124,8 @@ Our work diverges from these DNN-heavy strategies by employing the Papoulis-Gerc
 %% Realtime 
 
 \subsubsection{Sensor Suit}
-\subsubsubsection{Upsampling of lidar data} %% Further improvements dynamic lidar upsampling with kalman
+\paragraph{Upsampling of Lidar Data}
+%% Further improvements dynamic lidar upsampling with kalman
 
 \subsubsection{Experiment Scenarios}
 
@@ -291,6 +318,10 @@ citation first, followed by the original foreign-language citation \cite{b6}.
 \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
 \bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
 \end{thebibliography}
+
+\bibliographystyle{plain} % We choose the "plain" reference style
+\bibliography{refs} % Entries are in the refs.bib file
+
 \vspace{12pt}
 \color{red}
 IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
