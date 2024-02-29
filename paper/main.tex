@@ -66,7 +66,7 @@ In the realm of stereo-LiDAR fusion, approaches like those proposed by Parks et 
 Our work diverges from these DNN-heavy strategies by employing the Papoulis-Gerchberg algorithm, a technique historically utilized in signal processing for super-resolution, adapted here for sensor fusion. This approach circumvents the prohibitive computational demands of DNNs, offering a lightweight yet robust alternative for real-time, accurate depth estimation from stereo-LiDAR data fusion.
 
 \section{Technical Approach}
-%% In this section explain the each step of the processing detaily.
+%% In this section explain each step of the processing detaily.
 
 The Papoulis-Gerchberg (PG) algorithm is an iterative technique employed in signal processing to perform band-limited signal extrapolation. This method enables the estimation of missing portions of a signal based on a limited segment of the original data and the knowledge of its bandwidth.
 
@@ -91,7 +91,7 @@ An application of this algorithm for image inpainting was proposed by \cite{pg-i
 
 Another noteworthy contribution is made by \cite{ozbay2015high}, presenting an enhanced iteration of the PG algorithm tailored for 3D point cloud data derived from LiDAR sensors. Their method focuses on upsampling to mitigate the latency in point acquisition observed when operating LiDAR at high-resolution modes, attributable to the inherently slow scan rates of cylindrical scanning systems. Nevertheless, it is important to note that this approach, too, relies on a singular sensory system.
 
-The utilization of the Papoulis-Gerchberg (PG) algorithm within our framework is primarily motivated by its deterministic nature, setting it apart from machine learning-based methodologies that often rely on probabilistic outcomes. A closer examination of the PG algorithm's underlying principles reveals two pivotal components: a densely populated base image intended for gap-filling using points of known accuracy, and the employment of these high-confidence points for iterative refinement. This paradigm bears a striking resemblance to the challenges inherent in sensor fusion. In our methodology, stereo depth images serve as the densely populated base analogous to the PG algorithm's framework, while LiDAR sparse data represent the high-confidence points. This analogy forms the cornerstone of our approach, leveraging the PG algorithm's architecture to integrate multi-sensorial data, thereby pioneering a novel application of PG in the realm of sensor fusion.
+The utilization of the Papoulis-Gerchberg (PG) algorithm within our framework is primarily motivated by its deterministic nature, setting it apart from DNN-based methodologies that often rely on probabilistic outcomes. A closer examination of the PG algorithm's underlying principles reveals two pivotal components: a densely populated base image intended for gap-filling using points of known accuracy, and the employment of these high-confidence points for iterative refinement. This paradigm bears a striking resemblance to the challenges inherent in sensor fusion. In our methodology, stereo depth images serve as the densely populated base analogous to the PG algorithm's framework, while LiDAR sparse data represent the high-confidence points. This analogy forms the cornerstone of our approach, leveraging the PG algorithm's architecture to integrate multi-sensorial data, thereby pioneering a novel application of PG in the realm of sensor fusion.
 
 \subsection{Pre-Processing}
 
@@ -132,25 +132,43 @@ This phase represents a pivotal component of our preprocessing strategy, primari
 The projection of sparse LiDAR point cloud data onto a two-dimensional plane inherently results in the presence of null values within the depth frames. These null values must be meticulously accounted for prior to the integration of LiDAR depth maps into our fusion algorithm. To address this, we employ a null value mask for the LiDAR depth data, which serves to identify and subsequently exclude spurious depth entities from the fused depth estimation. This preprocessing step is crucial for refining the depth information derived from stereo depth maps, utilizing the LiDAR data as a corrective measure to enhance the fidelity of the resultant depth image.
 
 \subsection{PG: Papoulis Gerchberg}
-We first intended to use Papoulish-Gerchberg algorithm as a pre-processing method to up sample the only LiDAR data. But the sparsity of the LiDAR data made it challenging to work with.
 
-We tried to apply zero-padding to empty regions of the depth frame obtained by the LiDAR samples. Since the Papoulish-Gerchberg method is an iterative method, zero background filling caused high amount of iterations to get reasonable results. And due to the sparse data especially in the vertical axis, the regions far from original LiDAR samples never get good results like the closer ones.
+Initially, our approach sought to leverage the Papoulis-Gerchberg algorithm as a method for pre-processing, specifically aimed at upsampling LiDAR data exclusively. However, the intrinsic sparsity of LiDAR measurements presented substantial challenges. The iterative nature of the Papoulis-Gerchberg method, when applied to areas devoid of data—filled with zero-padding—resulted in an excessively high number of iterations before achieving satisfactory outcomes. Moreover, the sparse nature of the data, particularly along the vertical axis, led to inadequate enhancement in regions distant from the original LiDAR samples, in stark contrast to areas proximal to these samples.
+
+In an effort to mitigate the iteration count, we experimented with initializing the empty regions with the mean depth value derived from the actual LiDAR samples. This approach, leveraging a more representative initial state, markedly reduced the number of necessary iterations by providing a closer approximation to the true depth values of the surrounding area. Nonetheless, the fundamental issue posed by the sparsity of the LiDAR data persisted.
 %% add an image to represent the papoulis with zero-padding
 
-Then to decrease number of iterations, we tried to initialize the background with mean of actual LiDAR samples. Since the mean value is much closer to the actual depth of the neighboring samples, it significantly reduced the iterations. But the problem with the sparsity of LiDAR data was still present.
+Addressing this challenge required a more robust solution. We turned to the work of our colleague, Ismail Uyanik, specifically his pioneering method, "Enhancing 3D range image measurement density via the dynamic Papoulis-Gerchberg algorithm." This approach, coupled with our mean value initialization strategy, offered a comprehensive solution. By incorporating a dynamic iteration of the PG algorithm, we significantly enhanced our ability to refine the depth data, particularly in sparsely measured areas, thereby overcoming the limitations previously encountered with LiDAR data sparsity.
 %% add another figure for mean filling
 
-We need more significant data to overcome this problem. The initial solution was the using previous work of our colleague @ismail-uyanik, {Enhancing 3D range image measurement density via dynamic Papoulis-Gerchberg algorithm} along with the mean filling method.
+% We need more significant data to overcome this problem. The initial solution was the using previous work of our colleague @ismail-uyanik, {Enhancing 3D range image measurement density via dynamic Papoulis-Gerchberg algorithm} along with the mean filling method.
+
+% BU DA OLABİLİR. İKİSİNİ DE GPT YAZDI
+% Initially, our strategy entailed leveraging the Papoulis-Gerchberg (PG) algorithm predominantly as a pre-processing technique to upscale LiDAR data exclusively. However, the inherent sparsity of LiDAR measurements posed significant challenges, particularly in maintaining the fidelity of depth information across the depth frame.
+
+% In an attempt to address the sparse nature of the LiDAR data, we explored the application of zero-padding to the vacant regions within the depth frames derived from LiDAR samples. Despite the iterative prowess of the PG algorithm, the introduction of a zero-value background substantially increased the number of iterations required to achieve satisfactory outcomes. More critically, due to the pronounced sparsity along the vertical axis, areas distant from the original LiDAR points consistently yielded inferior results compared to those in closer proximity.
+
+% To mitigate the excessive iteration counts, an alternative initialization strategy was considered, involving the use of the mean depth value from actual LiDAR samples as a background filler. This approach, by aligning the initial background estimation closer to the real depth values of neighboring points, markedly reduced the necessary iterations for convergence. Nonetheless, the fundamental issue of data sparsity remained inadequately addressed.
+
+% The breakthrough came with the incorporation of a technique developed by our colleague, Ismail Uyanik, titled "Enhancing 3D Range Image Measurement Density via Dynamic Papoulis-Gerchberg Algorithm." By integrating this method with our mean filling approach, we were able to significantly augment the density of the depth data. This synergy not only addressed the sparsity challenge but also empowered the PG algorithm to reconstruct depth frames with enhanced accuracy and reduced computational overhead, laying a robust foundation for the subsequent fusion process.
+
 %% cite the paper from kuzucu-elvan
 %% add another image explaining the plan
 \subsubsection{Our Approach}
-As the purpose of this study is to investigate the potential of integrating data obtained from stereo cameras and LiDAR measurements, we also have the depth information from stereo image pair. Our motivation of this paper's work turned to merge both processes, up sampling of LiDAR data and fusing the depth information obtained from both sources. This method extremely decreased the need of processing power, and allowed real-time application of the sensor fusion even in mobile computing devices.
-Basically the method is nothing but proposing the background of lidar measurements as depth frame from stereo pair instead of using only a mean value. Since the background filling is not non-significant data, we have mostly overcame the problem with sparsity of LiDAR measurements.
-We also made some modifications and improvements to the standard 2D Papoulish-Gerchberg algorithm to match our needs better.
+
+The primary objective of this research is to explore the integration of depth information derived from stereo cameras and LiDAR measurements. Our approach innovatively combines the upsampling of LiDAR data with the fusion of depth information from both sources. This methodology significantly reduces the computational demands, enabling the real-time application of sensor fusion on mobile computing platforms.
+
+At the core of our method is the strategy of utilizing the depth frame obtained from the stereo image pair as the background for LiDAR measurements, rather than relying solely on a mean value for background estimation. This approach effectively addresses the issue of LiDAR data sparsity by providing a rich, relevant context for the depth information. Consequently, this significantly enhances the depth frame's completeness and accuracy.
+
+Furthermore, we have adapted and refined the traditional 2D Papoulis-Gerchberg algorithm to better suit the unique requirements of our sensor fusion task.
+
 \paragraph{Use of Band Reject Filter in PG}
-As the nature of the low pass filters used in papoulis-gerchberg algorithm, they all eliminate the high frequency components as they meant to be. But in our case, the data shouldnt be losing these high frequency components. Normally papoulis-gerchberg algorithm assumes a continuous signal can't have sharp transitions. Sharp transitions meant to be losses of the signal, so papoulis-gerchberg algorithm tries to reconstruct the image by eliminating high frequency components.
-In our case the high frequency components or sharp transitions meant to be the transition between foreground to background, so we don't want to lose this information.
-To overcome this problem we proposed to use band-reject filter that allows higher and lower frequency components to pass, only mid frequencies to reject. mid frequencies assumed to be the differences between LiDAR measurements and estimated depth information from stereo pair. Iteratively applying this filter and placing Lidar points as anchors makes the estimation closer to the lidar's accuracy.
+
+A critical modification in our adaptation of the Papoulis-Gerchberg algorithm involves the application of a band-reject filter. The inherent design of low-pass filters within the PG algorithm is to attenuate high-frequency components, under the assumption that a continuous signal does not encompass abrupt transitions. Such transitions are typically interpreted as signal loss, prompting the PG algorithm to attempt image reconstruction by excluding high-frequency details.
+
+However, in the context of depth estimation, these high-frequency components or sharp transitions are indicative of the boundaries between foreground and background elements, carrying essential spatial information that we aim to preserve. To retain this critical detail, we introduce a band-reject filter that selectively allows the passage of both higher and lower frequency components while filtering out mid-frequency ranges. These mid-frequencies are presumed to represent discrepancies between LiDAR measurements and the depth estimates from the stereo pair.
+
+Through iterative application of this filter, coupled with the strategic placement of LiDAR points as accuracy anchors, our method progressively refines the depth estimation, aligning it more closely with the inherent precision of LiDAR data. This tailored filtering approach, therefore, plays a pivotal role in mitigating the fusion process's challenges, ensuring that the transition zones between different depth regions are accurately maintained, thereby enhancing the overall fidelity of the fused depth map.
 
 
 \paragraph{Evaluated PG for Our Work}
@@ -189,10 +207,18 @@ As defined in the previous section \ref{implementation}, our method is developed
 %% Realtime 
 
 \subsubsection{Sensor Suit}
+We conducted experiments using the data we collected from our sensors. We used Velodyne VLP-16 as 3D LiDAR and Zed Stereo Camera as main sensing devices. We also developed a suit that mounts the sensors we use for experimenting in fixed positions. The sensor suit has also an Nvidia Jetson Nano 4GB computer. The computer plays different roles in different experiment scenarios.
+% put images of sensor suit only
+To obtain real-life like conditions by mounting the sensor suit on top of a quadruped robot. 
+% put images of sensor suit with robot
 \paragraph{Upsampling of LiDAR Data}
 %% Further improvements dynamic LiDAR upsampling with kalman
 
 \subsubsection{Experiment Scenarios}
+\paragraph{Cloud Computing (Performance):}
+\paragraph{Mobile Computing (Performance):}
+\paragraph{SLAM (Quality):}
+% Put three slam maps and visual odometry visualization images {Only Stereo}, {Only Lidar}, {Fused}. AIM:Compare map quality and odomerty accuracy.
 
 
 \section{Results}
