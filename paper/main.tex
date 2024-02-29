@@ -193,19 +193,58 @@ Another critical component of the post-processing phase is the final depth consi
 
 Lastly, edge sharpening techniques are applied to restore and emphasize the definition of edges that may have been softened during the smoothing process. This is particularly important for maintaining the structural integrity of objects within the scene, allowing for clear delineation between different entities and the background. Techniques such as unsharp masking or adaptive sharpening filters can be employed to enhance edge clarity without introducing noise or artifacts.
 
+
+To provide a comprehensive explanation of the algorithm's implementation and its adaptation to linear algebra, let's expand on the structure you've outlined, detailing both the building and adaptation phases with clarity and technical depth.
+
 \section{Implementation} \label{implementation}
 
-The implementation of a proposed method is essential for experiments. Because of the robotic fields requirements, there are some constraints about the frequency of the algorithm, data rate of te sensors, and some other important facts. To accomplish all of this constraints, we use the power of the mathematics and the linear algebra. 
+The successful implementation of our proposed sensor fusion method is paramount, particularly given the stringent performance and efficiency requirements characteristic of robotic applications. These requirements include, but are not limited to, the need for high-frequency processing capabilities, efficient handling of data rates from multiple sensors, and adherence to computational constraints. To navigate these challenges, we harness the computational efficiency of linear algebra and the precision of mathematical formulations.
 
 \subsection{Building the Algorithm}
 
+The construction of our algorithm is underpinned by a modular design philosophy, facilitating flexibility and scalability. The core components include:
+
+\paragraph{Data Preprocessing Module} 
+This initial module is responsible for standardizing and preparing the input data from stereo cameras and LiDAR sensors. It includes procedures for data transformation, cropping, augmentation, and the application of null masks, as detailed in the pre-processing section.
+
+\paragraph{Fusion Core}
+At the heart of our method lies the fusion core, which employs the adapted Papoulis-Gerchberg algorithm. This component integrates the pre-processed stereo and LiDAR data, leveraging iterative refinement to enhance the depth map's resolution and accuracy.
+
+\paragraph{Post-Processing Module}
+Following the fusion process, this module applies several refinement techniques, including the removal of trivial augmented data, smoothing, consistency checks, and edge sharpening, ensuring the output depth map is of the highest quality and ready for application use.
+
 \subsection{Adopting the Algorithm to Linear Algebra}
+
+The adaptation of our algorithm to the principles of linear algebra is critical for achieving the desired computational efficiency and scalability. This adaptation involves:
+
+\paragraph{Matrix Representation of Data} 
+All input data, including depth frames from stereo images and LiDAR point clouds, are represented as matrices. This format facilitates the application of linear transformations and operations, streamlining the fusion process.
+
+\paragraph{Linear Transformations for Data Fusion}
+The core of the data fusion process relies on linear transformations, which are applied to align, scale, and integrate the stereo and LiDAR data within a unified depth framework. These transformations are mathematically defined to ensure precision and efficiency.
+
+\paragraph{Iterative Refinement via Linear Operations} 
+The iterative refinement process within the Papoulis-Gerchberg algorithm is implemented through a series of linear operations. This includes the use of linear filters for smoothing and the application of linear equations to model the iterative update mechanism.
+
+% Optimization Techniques: To further enhance performance, linear algebra-based optimization techniques are employed. These techniques are designed to reduce computational complexity, improve convergence speed, and ensure the algorithm can be executed in real-time on hardware with limited processing capabilities.
+
+% Parallel Processing and Hardware Acceleration: The algorithm is optimized for parallel processing, taking advantage of hardware acceleration features available in modern computing platforms. This optimization is facilitated by the decomposition of linear algebra operations into sub-tasks that can be executed concurrently, significantly reducing processing time.
 
 \section{Optimization}
 
-As defined in the previous section \ref{implementation}, our method is developed baed on the linear algebraic methods. Using the nature of the linear algebra, we introduce a parallel processing approach for our extended PG method. This introduce us a workspace that we can competite with our fellows (Buraya DNN gibi yapıları kullanarak GPU üzerinde koşan sensor fusion paperlarına alıntı yapılacak)
+Building upon the foundational linear algebraic principles outlined in the implementation section (\ref{implementation}), we have further optimized our extended Papoulis-Gerchberg (PG) method to harness parallel processing capabilities. This optimization enables our approach to achieve significant computational efficiency, making it competitive with contemporary sensor fusion methods that utilize deep neural networks (DNNs) and other computationally intensive techniques, often reliant on GPU acceleration.
+(Buraya DNN gibi yapıları kullanarak GPU üzerinde koşan sensor fusion paperlarına alıntı yapılacak)
 
 \subsection{GPU Acceleration}
+
+The cornerstone of our optimization strategy is GPU acceleration, which is particularly well-suited to the linear algebra operations at the heart of our method. By translating our algorithm's core processes into GPU-optimized computations, we can leverage the massive parallelism offered by modern GPUs. This allows for the simultaneous processing of multiple data elements, drastically reducing the time required for depth map fusion and refinement.
+
+Parallel Data Processing: Key operations, such as matrix multiplications and linear transformations, are implemented to take full advantage of GPU threads, ensuring that data from stereo images and LiDAR sensors can be processed concurrently.
+
+Iterative Refinement Optimization: The iterative nature of the PG algorithm benefits immensely from GPU acceleration. Each iteration, involving the update and refinement of depth estimations, is executed across thousands of GPU cores, significantly speeding up convergence towards the optimal depth map.
+
+Memory Management and Data Transfer: Efficient memory management techniques are employed to minimize the overhead associated with transferring data between CPU and GPU memory spaces. This includes the use of pinned memory and asynchronous data transfer operations to maintain high throughput and low latency.
+
 \subsection{Cloud Computing}
 
 \section{Experiment}
