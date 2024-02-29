@@ -127,7 +127,7 @@ This augmented approach to stereo depth infill not only rectifies the limitation
 
 This phase represents a pivotal component of our preprocessing strategy, primarily due to its critical role in safeguarding the integrity of the Papoulis-Gerchberg (PG) algorithm's iterative process. In the absence of this meticulous data augmentation step, the iterative nature of the PG algorithm could inadvertently exacerbate depth estimation errors with each subsequent iteration. Specifically, unaddressed gaps in the stereo depth images could lead to erroneous propagation and amplification of inaccuracies, undermining the algorithm's ability to refine and converge towards a precise depth map. Therefore, by ensuring that these gaps are effectively filled through the integration and interpolation of LiDAR data, we substantially enhance the stability and accuracy of the depth estimation process, particularly as the number of iterations increases. This augmentation is not merely a preparatory measure but a fundamental prerequisite for harnessing the full potential of the PG algorithm in achieving high-fidelity depth estimations from fused stereo-LiDAR data.
 
-\subsubsection{LiDAR Null Mask}
+\subsubsection{LiDAR Null Mask} \label{lidar-null-mask}
 
 The projection of sparse LiDAR point cloud data onto a two-dimensional plane inherently results in the presence of null values within the depth frames. These null values must be meticulously accounted for prior to the integration of LiDAR depth maps into our fusion algorithm. To address this, we employ a null value mask for the LiDAR depth data, which serves to identify and subsequently exclude spurious depth entities from the fused depth estimation. This preprocessing step is crucial for refining the depth information derived from stereo depth maps, utilizing the LiDAR data as a corrective measure to enhance the fidelity of the resultant depth image.
 
@@ -154,7 +154,7 @@ Addressing this challenge required a more robust solution. We turned to the work
 
 %% cite the paper from kuzucu-elvan
 %% add another image explaining the plan
-\subsubsection{Our Approach}
+\paragraph{Our Approach}
 
 The primary objective of this research is to explore the integration of depth information derived from stereo cameras and LiDAR measurements. Our approach innovatively combines the upsampling of LiDAR data with the fusion of depth information from both sources. This methodology significantly reduces the computational demands, enabling the real-time application of sensor fusion on mobile computing platforms.
 
@@ -171,13 +171,27 @@ However, in the context of depth estimation, these high-frequency components or 
 Through iterative application of this filter, coupled with the strategic placement of LiDAR points as accuracy anchors, our method progressively refines the depth estimation, aligning it more closely with the inherent precision of LiDAR data. This tailored filtering approach, therefore, plays a pivotal role in mitigating the fusion process's challenges, ensuring that the transition zones between different depth regions are accurately maintained, thereby enhancing the overall fidelity of the fused depth map.
 
 
-\paragraph{Evaluated PG for Our Work}
+% \paragraph{Evaluated PG for Our Work}
 
-\subsection{Post-Proc}
+\subsection{Post-Processing}
 
-The post-processing consinst of two major parts 
+The post-processing phase is designed to refine the fused depth data, ensuring its accuracy and consistency. This phase is divided into two primary components:
 
 \subsubsection{Removal of Trivial Augmented Data}
+
+A key step involves utilizing the stereo null mask to identify and eliminate any trivial or less reliable data that was introduced during the data augmentation process. Specifically, depth estimations that fall within areas masked by the stereo null mask are removed from the final depth frame. This mask effectively delineates regions where the stereo data lacked sufficient information, ensuring that only depth data with a high confidence level, either directly measured or accurately estimated, is retained in the final output.
+
+\subsubsection{Enhancement and Smoothing}
+
+To further improve the quality of the fused depth maps, an enhancement and smoothing process is applied. This involves the use of filtering techniques to reduce noise and smooth out rough edges, enhancing the overall visual quality of the depth map. Techniques such as Gaussian smoothing or median filtering can be particularly effective in achieving a more coherent depth representation, especially in areas where the fusion of stereo and LiDAR data may produce discontinuities or artifacts.
+
+\subsubsection{Final Depth Consistency Check}
+
+Another critical component of the post-processing phase is the final depth consistency check. This step involves comparing the processed depth map against the original LiDAR and stereo data to identify and correct any discrepancies. Discrepancy correction can be performed through a combination of automated threshold-based adjustments and manual inspections, ensuring that the final depth map faithfully represents the real-world scene.
+
+\subsubsection{Edge Sharpening}
+
+Lastly, edge sharpening techniques are applied to restore and emphasize the definition of edges that may have been softened during the smoothing process. This is particularly important for maintaining the structural integrity of objects within the scene, allowing for clear delineation between different entities and the background. Techniques such as unsharp masking or adaptive sharpening filters can be employed to enhance edge clarity without introducing noise or artifacts.
 
 \section{Implementation} \label{implementation}
 
@@ -230,5 +244,9 @@ To obtain real-life like conditions by mounting the sensor suit on top of a quad
 \vspace{12pt}
 \color{red}
 IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
+
+\vspace{12pt}
+\color{red}
+Tüm referanslar kontrol edilmeli (label referansları dahil)
 
 \end{document}
