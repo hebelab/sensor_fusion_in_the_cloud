@@ -239,13 +239,21 @@ Building upon the foundational linear algebraic principles outlined in the imple
 
 The cornerstone of our optimization strategy is GPU acceleration, which is particularly well-suited to the linear algebra operations at the heart of our method. By translating our algorithm's core processes into GPU-optimized computations, we can leverage the massive parallelism offered by modern GPUs. This allows for the simultaneous processing of multiple data elements, drastically reducing the time required for depth map fusion and refinement.
 
-Parallel Data Processing: Key operations, such as matrix multiplications and linear transformations, are implemented to take full advantage of GPU threads, ensuring that data from stereo images and LiDAR sensors can be processed concurrently.
+\paragraph{Parallel Data Processing} Key operations, such as matrix multiplications and linear transformations, are implemented to take full advantage of GPU threads, ensuring that data from stereo images and LiDAR sensors can be processed concurrently.
 
-Iterative Refinement Optimization: The iterative nature of the PG algorithm benefits immensely from GPU acceleration. Each iteration, involving the update and refinement of depth estimations, is executed across thousands of GPU cores, significantly speeding up convergence towards the optimal depth map.
+\paragraph{Iterative Refinement Optimization} The iterative nature of the PG algorithm benefits immensely from GPU acceleration. Each iteration, involving the update and refinement of depth estimations, is executed across thousands of GPU cores, significantly speeding up convergence towards the optimal depth map.
 
-Memory Management and Data Transfer: Efficient memory management techniques are employed to minimize the overhead associated with transferring data between CPU and GPU memory spaces. This includes the use of pinned memory and asynchronous data transfer operations to maintain high throughput and low latency.
+\paragraph{Memory Management and Data Transfer} Efficient memory management techniques are employed to minimize the overhead associated with transferring data between CPU and GPU memory spaces. This includes the use of pinned memory and asynchronous data transfer operations to maintain high throughput and low latency.
 
 \subsection{Cloud Computing}
+
+To further enhance the scalability and accessibility of our sensor fusion method, we integrate cloud computing resources. This integration not only extends the computational capabilities beyond the confines of local hardware but also facilitates the processing of large datasets and the deployment of our solution in distributed systems.
+
+\paragraph{Scalable Computing Resources} By leveraging cloud-based GPUs and distributed computing environments, our method can dynamically allocate resources based on the complexity of the data and the required processing power, ensuring efficient handling of varying workloads.
+
+\paragraph{Collaborative Processing} The cloud computing model enables collaborative sensor fusion tasks, where data from multiple sources can be integrated and processed in a centralized manner. This is particularly advantageous for applications requiring real-time analysis of data from distributed sensor networks.
+
+\paragraph{Deployment Flexibility} The adoption of cloud computing allows for the deployment of our sensor fusion solution across a range of platforms, from mobile devices with limited processing capabilities to enterprise-level systems requiring high throughput and real-time performance.
 
 \section{Experiment}
 
