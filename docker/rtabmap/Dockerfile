@@ -1,2 +1,2 @@
-FROM introlab3it/rtabmap_ros:melodic-latest
+FROM introlab3it/rtabmap_ros:noetic-latest
 CMD [ "/bin/bash" ]

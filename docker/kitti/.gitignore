@@ -1,0 +1,5 @@
+.cache
+.ros
+.python_history
+catkin_ws/build/
+catkin_ws/devel/
