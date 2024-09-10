@@ -12,35 +12,38 @@
 \begin{document}
 
 \title{Enhancing Depth Estimation with Iterative Stereo-LiDAR Fusion: An Application of the Papoulis-Gerchberg Algorithm\\
-{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
-should not be used}
-\thanks{Identify applicable funding agency here. If none, delete this.}
+% {\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and should not be used}
+% \thanks{Identify applicable funding agency here. If none, delete this.}
 }
 
 \author{
-\IEEEauthorblockN{1\textsuperscript{st} Assc. Prof. İsmail Uyanık}
-\IEEEauthorblockA{\textit{Department of Electrical and Electronics Engineering} \\
-\textit{Hacettepe University}\\
-Ankara, Turkiye \\
-uyanik@ee.hacettepe.edu.tr}
-\and
-\IEEEauthorblockN{2\textsuperscript{st} Ahmet Yusuf Şirin}
-\IEEEauthorblockA{\textit{Department of Electrical and Electronics Engineering} \\
-\textit{Hacettepe University}\\
-Ankara, Turkiye \\
-ayusufsirin@gmail.com}
-\and
-\IEEEauthorblockN{3\textsuperscript{rd} Ertuğrul Tiyek}
-\IEEEauthorblockA{\textit{Department of Electrical and Electronics Engineering} \\
-\textit{Hacettepe University}\\
-Ankara, Turkiye \\
-ertugrultyk@gmail.com}
+    \IEEEauthorblockN{2\textsuperscript{st} Ahmet Yusuf Şirin}
+    \IEEEauthorblockA{\textit{Department of Electrical and Electronics Engineering} \\
+    \textit{Hacettepe University}\\
+    Ankara, Turkiye \\
+    ayusufsirin@gmail.com}
+    \and
+    \IEEEauthorblockN{3\textsuperscript{rd} Ertuğrul Tiyek}
+    \IEEEauthorblockA{\textit{Department of Electrical and Electronics Engineering} \\
+    \textit{Hacettepe University}\\
+    Ankara, Turkiye \\
+    ertugrultyk@gmail.com}
+    \and
+    \IEEEauthorblockN{1\textsuperscript{st} Assc. Prof. İsmail Uyanık}
+    \IEEEauthorblockA{\textit{Department of Electrical and Electronics Engineering} \\
+    \textit{Hacettepe University}\\
+    Ankara, Turkiye \\
+    uyanik@ee.hacettepe.edu.tr}
 }
 
 \maketitle
 
 \begin{abstract}
-Depth perception in autonomous systems is critically enhanced by sensor fusion techniques, which traditionally rely on the combination of stereo vision and LiDAR data. However, the challenge of integrating sparse LiDAR data with dense stereo imagery remains. This paper introduces a novel fusion approach that applies the Papoulis-Gerchberg algorithm to iteratively refine stereo depth maps with LiDAR data. Our method uses LiDAR measurements as anchor points to guide the enhancement of depth information, resulting in superior resolution and accuracy. We evaluate our approach using the KITTI benchmark suite, demonstrating significant improvements over existing methods such as FastFusion, particularly in edge definition and object boundary sharpness. The results suggest our method not only achieves higher fidelity in depth estimation but also offers a new perspective on sensor data integration for real-time applications in autonomous navigation.
+Depth perception in autonomous systems is critically enhanced through sensor fusion, where the integration of stereo vision and LiDAR data plays a pivotal role. However, effectively merging sparse LiDAR measurements with dense stereo imagery remains a key challenge. This paper introduces a novel fusion method based on the Papoulis-Gerchberg algorithm, which iteratively refines stereo depth maps using LiDAR data as anchor points. By leveraging these anchor points, our approach enhances depth map resolution and accuracy, particularly in areas where traditional methods struggle, such as object boundaries and edge definition.
+
+We validate our method using the KITTI benchmark suite, demonstrating substantial improvements over existing approaches like FastFusion, particularly in edge sharpness and object boundary clarity. These results highlight the potential of our method to not only achieve superior fidelity in depth estimation but also to set a new standard for sensor data integration in real-time autonomous navigation.
+
+To test our approach in real-world conditions, we introduce a versatile mobile sensor suite, comprising a Velodyne VLP16 LiDAR, ZED Stereo Camera, and an NVIDIA Jetson Nano for on-board processing. This sensor suite is mounted on a legged robot platform to simulate vibrations and disturbances common in military and civilian applications. The collected data is processed using the ROS framework, and SLAM algorithms are employed to evaluate the system’s performance, providing a complete test loop for autonomous navigation tasks.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -95,11 +98,11 @@ The utilization of the Papoulis-Gerchberg (PG) algorithm within our framework is
 
 \subsection{Pre-Processing}
 
-The fusion of data from heterogeneous sensor systems, such as LiDAR and stereo cameras, presents a unique set of challenges, primarily due to the fundamental differences in their respective depth information representations. LiDAR sensors provide sparse but highly accurate point clouds, whereas stereo vision techniques yield dense disparity maps with varying degrees of precision. To effectively integrate these diverse data modalities, a comprehensive pre-processing regimen is indispensable. This regimen encompasses transformation, conversion, and upsampling procedures designed to standardize the data, thereby laying the groundwork for their combined analysis.
+The fusion of data from heterogeneous sensor systems, such as LiDAR and stereo cameras, presents a unique set of challenges, primarily due to the fundamental differences in their respective depth information representations. LiDAR sensors provide sparse but highly accurate point clouds, whereas stereo vision techniques yield dense disparity maps with varying degrees of precision. To effectively integrate these diverse data modalities, a comprehensive pre-processing regimen is indispensable. This regimen encompasses transformation, conversion, and history based infill procedures designed to standardize the data, thereby laying the groundwork for their combined analysis.
 
 Transformation and Conversion: The initial step involves transforming the LiDAR-generated point clouds and stereo vision-produced disparity maps into a uniform format. We opt for the single-channel depth image format as this common ground facilitates the merging process. This transformation is critical not only for aligning the data spatially but also for ensuring that subsequent processing stages operate on data that are consistent in terms of dimensionality and scale.
 
-Upsampling: Given the sparse nature of LiDAR data compared to the relatively denser outputs from stereo vision, upsampling is employed to increase the resolution of the LiDAR measurements. This step is crucial for achieving a density comparable to that of the stereo disparity maps, thereby enhancing the reliability of the fused depth information. Upsampling is carefully executed to preserve the integrity of the LiDAR data, ensuring that the enhanced resolution does not compromise the accuracy inherent to LiDAR measurements.
+History Based LiDAR Infill: We use a history based data augmentation for sparse LiDAR data. The previous point cloud frames are translated by the negative derivative of the current velocity to infill the empty regions in the point cloud. This makes us to integrate already known points to the future estimations.
 
 RGB Integration Exclusion: It is worth noting that our approach does not necessitate the integration of RGB data. This decision streamlines the preprocessing phase, focusing solely on depth information, which is paramount for our application. The exclusion of RGB data underscores our methodology's emphasis on depth accuracy and computational efficiency, aligning with the objective of developing a lightweight and practical fusion algorithm.
 
@@ -162,13 +165,13 @@ At the core of our method is the strategy of utilizing the depth frame obtained 
 
 Furthermore, we have adapted and refined the traditional 2D Papoulis-Gerchberg algorithm to better suit the unique requirements of our sensor fusion task.
 
-\paragraph{Use of Band Reject Filter in PG}
+% \paragraph{Use of Band Reject Filter in PG}
 
-A critical modification in our adaptation of the Papoulis-Gerchberg algorithm involves the application of a band-reject filter. The inherent design of low-pass filters within the PG algorithm is to attenuate high-frequency components, under the assumption that a continuous signal does not encompass abrupt transitions. Such transitions are typically interpreted as signal loss, prompting the PG algorithm to attempt image reconstruction by excluding high-frequency details.
+% A critical modification in our adaptation of the Papoulis-Gerchberg algorithm involves the application of a band-reject filter. The inherent design of low-pass filters within the PG algorithm is to attenuate high-frequency components, under the assumption that a continuous signal does not encompass abrupt transitions. Such transitions are typically interpreted as signal loss, prompting the PG algorithm to attempt image reconstruction by excluding high-frequency details.
 
-However, in the context of depth estimation, these high-frequency components or sharp transitions are indicative of the boundaries between foreground and background elements, carrying essential spatial information that we aim to preserve. To retain this critical detail, we introduce a band-reject filter that selectively allows the passage of both higher and lower frequency components while filtering out mid-frequency ranges. These mid-frequencies are presumed to represent discrepancies between LiDAR measurements and the depth estimates from the stereo pair.
+% However, in the context of depth estimation, these high-frequency components or sharp transitions are indicative of the boundaries between foreground and background elements, carrying essential spatial information that we aim to preserve. To retain this critical detail, we introduce a band-reject filter that selectively allows the passage of both higher and lower frequency components while filtering out mid-frequency ranges. These mid-frequencies are presumed to represent discrepancies between LiDAR measurements and the depth estimates from the stereo pair.
 
-Through iterative application of this filter, coupled with the strategic placement of LiDAR points as accuracy anchors, our method progressively refines the depth estimation, aligning it more closely with the inherent precision of LiDAR data. This tailored filtering approach, therefore, plays a pivotal role in mitigating the fusion process's challenges, ensuring that the transition zones between different depth regions are accurately maintained, thereby enhancing the overall fidelity of the fused depth map.
+% Through iterative application of this filter, coupled with the strategic placement of LiDAR points as accuracy anchors, our method progressively refines the depth estimation, aligning it more closely with the inherent precision of LiDAR data. This tailored filtering approach, therefore, plays a pivotal role in mitigating the fusion process's challenges, ensuring that the transition zones between different depth regions are accurately maintained, thereby enhancing the overall fidelity of the fused depth map.
 
 
 % \paragraph{Evaluated PG for Our Work}
@@ -189,9 +192,9 @@ To further improve the quality of the fused depth maps, an enhancement and smoot
 
 Another critical component of the post-processing phase is the final depth consistency check. This step involves comparing the processed depth map against the original LiDAR and stereo data to identify and correct any discrepancies. Discrepancy correction can be performed through a combination of automated threshold-based adjustments and manual inspections, ensuring that the final depth map faithfully represents the real-world scene.
 
-\subsubsection{Edge Sharpening}
+% \subsubsection{Edge Sharpening}
 
-Lastly, edge sharpening techniques are applied to restore and emphasize the definition of edges that may have been softened during the smoothing process. This is particularly important for maintaining the structural integrity of objects within the scene, allowing for clear delineation between different entities and the background. Techniques such as unsharp masking or adaptive sharpening filters can be employed to enhance edge clarity without introducing noise or artifacts.
+% Lastly, edge sharpening techniques are applied to restore and emphasize the definition of edges that may have been softened during the smoothing process. This is particularly important for maintaining the structural integrity of objects within the scene, allowing for clear delineation between different entities and the background. Techniques such as unsharp masking or adaptive sharpening filters can be employed to enhance edge clarity without introducing noise or artifacts.
 
 
 To provide a comprehensive explanation of the algorithm's implementation and its adaptation to linear algebra, let's expand on the structure you've outlined, detailing both the building and adaptation phases with clarity and technical depth.
@@ -211,7 +214,7 @@ This initial module is responsible for standardizing and preparing the input dat
 At the heart of our method lies the fusion core, which employs the adapted Papoulis-Gerchberg algorithm. This component integrates the pre-processed stereo and LiDAR data, leveraging iterative refinement to enhance the depth map's resolution and accuracy.
 
 \paragraph{Post-Processing Module}
-Following the fusion process, this module applies several refinement techniques, including the removal of trivial augmented data, smoothing, consistency checks, and edge sharpening, ensuring the output depth map is of the highest quality and ready for application use.
+Following the fusion process, this module applies several refinement techniques, including the removal of trivial augmented data, smoothing, and consistency checks, ensuring the output depth map is of the highest quality and ready for application use.
 
 \subsection{Adopting the Algorithm to Linear Algebra}
 
