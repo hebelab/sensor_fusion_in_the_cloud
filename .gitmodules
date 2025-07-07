@@ -7,3 +7,9 @@
 [submodule "docker/rtk/catkin_ws/src/rtk-ros-wrapper"]
 	path = docker/rtk/catkin_ws/src/rtk-ros-wrapper
 	url = https://github.com/ayusufsirin/rtk-ros-wrapper.git
+[submodule "lidar_upsample"]
+	path = lidar_upsample
+	url = https://github.com/ayusufsirin/lidar_upsample.git
+[submodule "CitrusFarmSFITC"]
+	path = CitrusFarmSFITC
+	url = https://github.com/ayusufsirin/CitrusFarmSFITC.git
